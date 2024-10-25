@@ -1,11 +1,14 @@
 package LOGICA;
 
 import GUI.Pantalla;
+import com.yeferal.main.AnalizadorLexico;
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
@@ -21,12 +24,12 @@ public class GestorTexto {
     private String textoOriginal;
     private String[] lineasOriginal;
     private JTextPane panelTexto;
+    private JTextPane txtColores;
     private StyledDocument doc;
     private SimpleAttributeSet attributeSet = new SimpleAttributeSet();
-
-    private AnalizadorHTML analizadorHTML;
-    private AnalizadorJS analizadorJS;
-    private AnalizadorCSS analizadorCSS;
+    private List<Token> tokens;
+    private List<Token> tokensColores;
+    private List<Token> erroresLexico;
 
     public GestorTexto() {
     }
@@ -39,76 +42,58 @@ public class GestorTexto {
         this.textoOriginal = textoOriginal;
     }
 
-    public void procesar(String textoOriginal, JTextPane panelTexto) {
+    public void procesar(String textoOriginal, JTextPane panelTexto, JTextPane txtColores) {
         this.textoOriginal = textoOriginal;
         this.panelTexto = panelTexto;
-        this.doc = panelTexto.getStyledDocument();
+        this.txtColores = txtColores;
+        this.doc = txtColores.getStyledDocument();
 
         obtenerMatrizLineas(textoOriginal);
 
-        procesarPalabras();
+        procesarAnalizadorLexico();
+
+        imprimirValores();
+        imprimirMatrizColores();
+
+        procesarAnalizadorSintactico();
 
     }
 
     public void obtenerMatrizLineas(String textoOriginal) {
 
-        //System.out.println("Obteniendo matriz Lineas");
         this.lineasOriginal = textoOriginal.split("\n");
 
     }
 
-    private void procesarPalabras() {
+    private void procesarAnalizadorLexico() {
+        txtColores.setText("");
         try {
-            panelTexto.setText("");
-            cambiarColor();
-            
-            int indiceActual = 0;
 
-            for (int indice = 0; indice < lineasOriginal.length; indice++) {
-                
-                if (indiceActual != indice) {
-                    agregarCambioLinea();
-                    indiceActual = indice;
-                }
-                
-                StyleConstants.setForeground(attributeSet, cambiarColor());
-                
-                panelTexto.setCharacterAttributes(attributeSet, true);
-                
-                doc.insertString(doc.getLength(), lineasOriginal[indice], attributeSet);
-                
-                //Falta definir el cambio de línea
+            AnalizadorLexico analizadorLexico = new AnalizadorLexico(new StringReader(textoOriginal));
 
+            while (analizadorLexico.yylex() != AnalizadorLexico.YYEOF) {
             }
+//            analizadorLexico.yylex();
 
-            StyleConstants.setForeground(attributeSet, Color.red);
+            tokens = new ArrayList<>();
+            tokensColores = new ArrayList<>();
+            erroresLexico = new ArrayList<>();
 
-            panelTexto.setCharacterAttributes(attributeSet, true);
-            doc.insertString(0, "nada", attributeSet);
-
-            StyleConstants.setForeground(attributeSet, Color.blue);
-
-            panelTexto.setCharacterAttributes(attributeSet, true);
-
-            doc.insertString(doc.getLength(), " bueno", attributeSet);
-            
-
-            doc.insertString(doc.getLength(), "manana", attributeSet);
-
-            doc.insertString(doc.getLength(), "\n", attributeSet);
-            doc.insertString(doc.getLength(), "ahora", attributeSet);
+            tokens = analizadorLexico.getLista();
+            tokensColores = analizadorLexico.getListaColores();
+            erroresLexico = analizadorLexico.getListaErrores();
 
         } catch (Exception ex) {
+            System.out.println("Error extrayendo valores analizador léxico");
             ex.printStackTrace();
         }
     }
 
-    public Color cambiarColor() {
+    public Color cambiarColor(Token token) {
         //Hay que ver la lógica según el analizador
-        
-        return Color.red;
+        return token.getColorToken();
     }
-    
+
     public void agregarCambioLinea() {
         try {
             doc.insertString(doc.getLength(), "\n", attributeSet);
@@ -117,55 +102,54 @@ public class GestorTexto {
         }
     }
 
-    public void generarHTML() {
+    private void imprimirValores() {
+        System.out.println("");
+        System.out.println("Imprimiendo Tokens");
+        for (Token token : tokens) {
+            System.out.println(token);
+        }
+        
+        System.out.println("");
+        System.out.println("Imprimiendo Tokens Colores");
+        for (Token token : tokensColores) {
+            System.out.println(token);
+        }
+        
+        
 
-        ArrayList<String> contenidoHTML = analizadorHTML.getContenidoOptimizadoHTML();
-        ArrayList<String> contenidoCSS = analizadorCSS.getContenidoOptimizadoCSS();
-        ArrayList<String> contenidoJS = analizadorJS.getContenidoOptimizadoJS();
-
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("doc.html"));
-
-            writer.write("<!DOCTYPE html>");
-            writer.write("\n<html lang=\"en\">");
-            writer.write("\n<head>");
-            writer.write("\n    <meta charset=\"UTF-8\" />");
-            writer.write("\n    <meta name=\"viewport\" content=\"width-device-width, initial-scale=1.0\">");
-            writer.write("\n    <title>Documento</title>");
-            writer.write("\n    <style>");
-            /* Código CSS */
-            for (String linea : contenidoCSS) {
-                writer.write("\n" + linea);
-            }
-
-            writer.write("\n    </style>");
-            writer.write("\n    <script>");
-            /* Código JS */
-            for (String linea : contenidoJS) {
-                writer.write("\n" + linea);
-            }
-
-            writer.write("\n    </script>");
-            writer.write("\n</head>");
-            writer.write("\n<body>");
-            /* Código HTML */
-            for (String linea : contenidoHTML) {
-                writer.write("\n" + linea);
-                //System.out.println("Linea: " + linea);
-            }
-
-            writer.write("\n</body>");
-            writer.write("\n</html>");
-
-            writer.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        System.out.println("");
+        System.out.println("Imprimiendo Errores");
+        for (Token tokenError : erroresLexico) {
+            System.out.println(tokenError);
         }
     }
 
-    public void reporteTokens() {
-        ArrayList<Token> tokens = new ArrayList<>();
+    private void imprimirMatrizColores() {
+        //Colores
+        try {
+            for (Token token : tokensColores) {
 
+                StyleConstants.setForeground(attributeSet, token.getColorToken());
+                txtColores.setCharacterAttributes(attributeSet, true);
+
+                doc.insertString(doc.getLength(), token.getNombre(), attributeSet);
+
+                //doc.insertString(doc.getLength(), lineasOriginal[indice], attributeSet);
+                doc.insertString(doc.getLength(), " ", attributeSet);
+            }
+        } catch (BadLocationException ex) {
+            System.out.println("Error imprimiendo colores");
+            Logger.getLogger(GestorTexto.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    private void procesarAnalizadorSintactico() {
+        AnalizadorDDL analizadorDDL = new AnalizadorDDL(tokens, lineasOriginal);
+        
+        
+        analizadorDDL.procesar();
+
+        
+
+    }
 }

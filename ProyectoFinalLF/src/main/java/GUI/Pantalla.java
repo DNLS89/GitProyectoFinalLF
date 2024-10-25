@@ -14,12 +14,10 @@ import javax.swing.text.StyledDocument;
 
 public class Pantalla extends javax.swing.JFrame {
 
-    LineNumberTextAreaTest lineNumber;
     GestorTexto gestorTexto = new GestorTexto();
 
     public Pantalla() {
         initComponents();
-        this.lineNumber = new LineNumberTextAreaTest(texto);
     }
 
     /**
@@ -32,7 +30,6 @@ public class Pantalla extends javax.swing.JFrame {
     private void initComponents() {
 
         contenido5 = new javax.swing.JPanel();
-        texto = new javax.swing.JScrollPane();
         btnGenerarHTML = new javax.swing.JButton();
         btnAnalizar = new javax.swing.JButton();
         btnReporteTokens = new javax.swing.JButton();
@@ -40,6 +37,8 @@ public class Pantalla extends javax.swing.JFrame {
         btnGenerarGraficas = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtPanel = new javax.swing.JTextPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtColores = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -70,10 +69,16 @@ public class Pantalla extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(txtPanel);
 
+        jScrollPane1.setViewportView(txtColores);
+
         javax.swing.GroupLayout contenido5Layout = new javax.swing.GroupLayout(contenido5);
         contenido5.setLayout(contenido5Layout);
         contenido5Layout.setHorizontalGroup(
             contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contenido5Layout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addComponent(btnAnalizar)
+                .addContainerGap(1027, Short.MAX_VALUE))
             .addGroup(contenido5Layout.createSequentialGroup()
                 .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(contenido5Layout.createSequentialGroup()
@@ -83,36 +88,30 @@ public class Pantalla extends javax.swing.JFrame {
                         .addComponent(btnGenerarGraficas)
                         .addGap(59, 59, 59)
                         .addComponent(btnGenerarHTML)
-                        .addGap(47, 47, 47)
-                        .addComponent(btnReporteTokens))
+                        .addGap(47, 47, 47))
                     .addGroup(contenido5Layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addComponent(btnAnalizar)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addComponent(texto, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(178, 178, 178))
-            .addGroup(contenido5Layout.createSequentialGroup()
-                .addGap(196, 196, 196)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)))
+                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnReporteTokens)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
         contenido5Layout.setVerticalGroup(
             contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenido5Layout.createSequentialGroup()
-                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(contenido5Layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnGenerarHTML)
-                            .addComponent(btnReporteTokens)
-                            .addComponent(jButton1)
-                            .addComponent(btnGenerarGraficas)))
-                    .addGroup(contenido5Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(texto, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(116, 116, 116)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+                .addGap(44, 44, 44)
+                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGenerarHTML)
+                    .addComponent(btnReporteTokens)
+                    .addComponent(jButton1)
+                    .addComponent(btnGenerarGraficas))
+                .addGap(32, 32, 32)
+                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addComponent(btnAnalizar)
                 .addGap(25, 25, 25))
         );
@@ -139,7 +138,7 @@ public class Pantalla extends javax.swing.JFrame {
         if (!txtPanel.getText().isBlank()) {
             
             
-            gestorTexto.procesar(txtPanel.getText(), txtPanel);
+            gestorTexto.procesar(txtPanel.getText(), txtPanel, txtColores);
 
             
 
@@ -152,16 +151,16 @@ public class Pantalla extends javax.swing.JFrame {
     private void btnReporteTokensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteTokensActionPerformed
         // TODO add your handling code here:
 
-        gestorTexto.reporteTokens();
+        //gestorTexto.reporteTokens();
 
     }//GEN-LAST:event_btnReporteTokensActionPerformed
 
     private void btnGenerarHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarHTMLActionPerformed
-        if (!lineNumber.getText().isBlank()) {
-            gestorTexto.generarHTML();
-        } else {
-            JOptionPane.showMessageDialog(null, "No hay elementos ingresados", "ERROR", JOptionPane.PLAIN_MESSAGE);
-        }
+//        if (!lineNumber.getText().isBlank()) {
+//            gestorTexto.generarHTML();
+//        } else {
+//            JOptionPane.showMessageDialog(null, "No hay elementos ingresados", "ERROR", JOptionPane.PLAIN_MESSAGE);
+//        }
     }//GEN-LAST:event_btnGenerarHTMLActionPerformed
 
     /**
@@ -175,8 +174,9 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JButton btnReporteTokens;
     private javax.swing.JPanel contenido5;
     private javax.swing.JButton jButton1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane texto;
+    private javax.swing.JTextPane txtColores;
     private javax.swing.JTextPane txtPanel;
     // End of variables declaration//GEN-END:variables
 }

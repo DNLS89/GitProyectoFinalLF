@@ -1,21 +1,28 @@
 package LOGICA;
 
+import java.awt.Color;
+
 public class Token {
     private String nombre;
-    private String expresionRegular;
-    private String lenguaje;
     private String tipo;
     private int fila;
     private int columna;
-    private String idiomaSugerido = "";
+    private Color colorToken;
 
-    public Token(String nombre, String expresionRegular, String lenguaje, String tipo, int fila, int columna) {
+    public Token(String nombre, String tipo, int fila, int columna, Color colorToken) {
         this.nombre = nombre;
-        this.expresionRegular = expresionRegular;
-        this.lenguaje = lenguaje;
         this.tipo = tipo;
         this.fila = fila;
         this.columna = columna;
+        this.colorToken = colorToken;
+    }
+
+    public Color getColorToken() {
+        return colorToken;
+    }
+
+    public void setColorToken(Color colorToken) {
+        this.colorToken = colorToken;
     }
     
     public String getNombre() {
@@ -24,22 +31,6 @@ public class Token {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getExpresionRegular() {
-        return expresionRegular;
-    }
-
-    public void setExpresionRegular(String expresionRegular) {
-        this.expresionRegular = expresionRegular;
-    }
-
-    public String getLenguaje() {
-        return lenguaje;
-    }
-
-    public void setLenguaje(String lenguaje) {
-        this.lenguaje = lenguaje;
     }
 
     public String getTipo() {
@@ -66,18 +57,8 @@ public class Token {
         this.columna = columna;
     }
 
-    public String getIdiomaSugerido() {
-        return idiomaSugerido;
-    }
-
-    public void setIdiomaSugerido(String idiomaSugerido) {
-        this.idiomaSugerido = idiomaSugerido;
-    }
-    
-    
-
     @Override
     public String toString() {
-        return "Token{" + "nombre= " + nombre + " , expresionRegular= " + expresionRegular + ", lenguaje= " + lenguaje + ", tipo= " + tipo + ", fila= " + fila + ", columna= " + columna + '}';
+        return "Token{" + "nombre=" + nombre + ", tipo=" + tipo + ", fila=" + fila + ", columna=" + columna + ", colorToken=" + colorToken + '}';
     }
 }

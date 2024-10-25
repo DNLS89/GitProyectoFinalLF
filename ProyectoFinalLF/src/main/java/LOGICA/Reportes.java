@@ -88,13 +88,11 @@ public class Reportes {
 
             for (Token tokenIndividual : tokens) {
                 String token = tokenIndividual.getNombre();
-                String expresionRegular = tokenIndividual.getExpresionRegular();
-                String lenguaje = tokenIndividual.getLenguaje();
                 String tipo = tokenIndividual.getTipo();
                 int fila = tokenIndividual.getFila();
                 int columna = tokenIndividual.getColumna();
 
-                tableModel.addRow(new Object[]{token, expresionRegular, lenguaje, tipo, fila, columna});
+                tableModel.addRow(new Object[]{token, tipo, fila, columna});
             }
         } else {
             DefaultTableModel tableModel = (DefaultTableModel) tabla.getModel();
@@ -102,13 +100,11 @@ public class Reportes {
 
             for (Token tokenIndividual : tokens) {
                 String token = tokenIndividual.getNombre();
-                String lenguaje = tokenIndividual.getLenguaje();
                 //String tipo = tokenIndividual.getTipo();
                 int fila = tokenIndividual.getFila();
                 int columna = tokenIndividual.getColumna();
-                String lenguajeSugerido = tokenIndividual.getIdiomaSugerido();
 
-                tableModel.addRow(new Object[]{token, lenguaje, lenguajeSugerido, fila, columna});
+                tableModel.addRow(new Object[]{token, fila, columna});
             }
         }
 

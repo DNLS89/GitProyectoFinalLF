@@ -1,8 +1,8 @@
-package Automatas;
 
-public class AutomataDeId extends Automata {
+package AutomatasDDL;
 
-    @Override
+public class AutomataCreate {
+    
     public boolean verificarPerteneceAlAutomata(String entrada) {
         char estado;
 
@@ -16,7 +16,7 @@ public class AutomataDeId extends Automata {
                 case 'A':
                     //Abajo entra a la letra y en base a eso cambia de estado
                     switch (letra) {
-                        case '#':
+                        case '.':
                             estado = 'B';
                             break;
                         default:
@@ -68,4 +68,5 @@ public class AutomataDeId extends Automata {
 
         return false;
     }
+    
 }
