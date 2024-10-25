@@ -52,7 +52,7 @@ public class GestorTexto {
 
         procesarAnalizadorLexico();
 
-        imprimirValores();
+        //imprimirValores();
         imprimirMatrizColores();
 
         procesarAnalizadorSintactico();

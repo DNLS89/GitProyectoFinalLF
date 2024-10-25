@@ -1,5 +1,6 @@
 package LOGICA;
 
+import AutomatasDDL.AutomataCreate;
 import LOGICA.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,8 @@ public class AnalizadorDDL {
 
         for (List<Token> comandoIndividual : todosLosComandos) {
             if (comandoCumpleRequisitos(comandoIndividual)) {
-                //Genrar la imagen
+                //Genrerar la imagen
+                
             }
         }
 
@@ -66,27 +68,19 @@ public class AnalizadorDDL {
         }
     }
 
-    public boolean comandoCumpleRequisitos(List<Token> comando) {
+    public boolean comandoCumpleRequisitos(List<Token> comandoIndividual) {
 
-        boolean dentroParentesis = false;
-        boolean dentroEstrucDeclaracion = false;
-        boolean dentroEstrucLlaves = false;
+        AutomataCreate automataCreate = new AutomataCreate(tokens);
         
-        
-        
-        if (!comando.get(1).getNombre().equals("TABLE") 
-                || !comando.get(1).getNombre().equals("DATABASE") 
-                || !comando.get(2).getTipo().equals("IDENTIFICADOR")) {
+        if (automataCreate.verificarPerteneceAlAutomata(comandoIndividual)) {
+            System.out.println("Cumple con formato Create");
+            return true;
+        } else {
+            System.out.println("NO es formato Create");
             return false;
         }
-        
-        for (Token token : comando) {
-            
-            
-            
-        }
 
-        return true;
+        
     }
 
 }
