@@ -31,7 +31,7 @@ public class AutomataCreate {
             System.out.println("");
             System.out.println("ESTADOS: normal " + estado + " declaracion " + estadoDeclaracion
                     + " datos " + estadoTipoDeDatos + " estructu " + estadoEstructuraLlave);
-            System.out.println("Evaluando token automata " + token.getNombre());
+            System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo());
 
             switch (estado) {
                 case 'A':
@@ -116,9 +116,9 @@ public class AutomataCreate {
                 case 'J':
                     
                     if (token.getTipo().equals("IDENTIFICADOR") && !comprobarEsEstructuraLlaves) {
-                        comprobarEsEstructuraDeclaracion(token, indiceToken);
+                        //comprobarEsEstructuraDeclaracion(token, indiceToken);
                         comprobarEsEstructuraDeclaracion = true;
-                        break;
+                        
                     } else if (token.getNombre().equals("CONSTRAINT")) {
                         //comprobarEsEstructuraLlaves(token);
                         comprobarEsEstructuraLlaves = true;
@@ -145,7 +145,7 @@ public class AutomataCreate {
                     }
                     break;
                 case 'E':
-                    System.out.println("Token en el que detectó error: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
+                    System.out.println("Token en el que detectó error CREATE: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
                     return false;
                 //break;
 
@@ -153,6 +153,7 @@ public class AutomataCreate {
         }
 
         if (estado == 'D') {
+            System.out.println("Cumple con formato Create");
             return true;
         }
 
@@ -257,7 +258,7 @@ public class AutomataCreate {
                 } else if (tokenIndividual.getNombre().equals("VARCHAR")) {
                     estadoTipoDeDatos = 'B';
                     System.out.println("ESTADO B");
-                } else if (tokenIndividual.getNombre().equals("DECIMAL")) {
+                } else if (tokenIndividual.getNombre().equals("DECIMAL") || tokenIndividual.getNombre().equals("NUMERIC")) {
                     estadoTipoDeDatos = 'G';
                 } else {
                     estado = 'E';

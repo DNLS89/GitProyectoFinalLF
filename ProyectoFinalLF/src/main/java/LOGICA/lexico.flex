@@ -50,21 +50,22 @@ DOS = [2]
 TRES= [3]
 
 //LETRAS
-LETRA = [a-zA-z]
+LETRA = [a-zA-záéíóú]
 MINUSCULA = [a-z]
 //ESPACIOS = [" "\r\t\b\n]
 ESPACIOS = [\r\t\b]
 NEWLINE = [\n]
 SPACE = [" "]
 GUIONBAJO = [_]
+TODO = ("_"|"-"|"/"|"."|","|"~"|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"*"|"|"|"("|")"|"="|"+"|"|"|"\"|":"|";"|"""|"<"|">"|"?"|"`"|"{"|"}"|"["|"]")
 
 CREATE = ("CREATE" | "DATABASE" | "TABLE" | "KEY" | "NULL" | "PRIMARY" | "UNIQUE" | "FOREIGN" | 
           "REFERENCES" | "ALTER" | "ADD" | "COLUMN" | "TYPE" | "DROP" | "CONSTRAINT" | "IF" | 
-          "EXIST" | "CASCADE" | "ON" | "DELETE" | "SET" | "UPDATE" | "INSERT" | "INTO" | 
+          "EXIST" | "EXISTS" | "CASCADE" | "ON" | "DELETE" | "SET" | "UPDATE" | "INSERT" | "INTO" | 
           "VALUES" | "SELECT" | "FROM" | "WHERE" | "AS" | "GROUP" | "ORDER" | "BY" | 
           "ASC" | "DESC" | "LIMIT" | "JOIN")
 
-TIPODEDATO = ("INTEGER" | "BIGINT" | "VARCHAR" | "DECIMAL" | "DATE" | "TEXT" | "BOOLEAN" | "SERIAL")
+TIPODEDATO = ("INTEGER" | "NUMERIC" | "BIGINT" | "VARCHAR" | "DECIMAL" | "DATE" | "TEXT" | "BOOLEAN" | "SERIAL")
 
 //FECHAS
 ANO = ({ENTERO1}{ENTERO1}{ENTERO1}{ENTERO1})
@@ -85,6 +86,7 @@ LOGICOS = ("AND" | "OR" | "NOT")
 
 
 
+
 %%
 // Reglas de Escaneo de Expresiones
 
@@ -97,10 +99,10 @@ LOGICOS = ("AND" | "OR" | "NOT")
 {ENTERO1}{ENTERO1}*"."{ENTERO1}{ENTERO1}*                                    { Token token = new Token(yytext(), "DECIMAL", yyline + 1, yycolumn + 1, Color.BLUE); lista.add(token); listaColores.add(token); }
 
 //Fecha
-"'"{ANO}"-"{MES}"-"{DIAS}"'"                                                 {Token token = new Token(yytext(), "FECHA", yyline + 1, yycolumn + 1, Color.YELLOW); lista.add(token); listaColores.add(token); }
+("'" | "‘"){ANO}"-"{MES}"-"{DIAS}("'" | "’")                                                 {Token token = new Token(yytext(), "FECHA", yyline + 1, yycolumn + 1, Color.YELLOW); lista.add(token); listaColores.add(token); }
 
 //CADENA
-"'"({LETRA} | {ENTERO1} | {SPACE})({LETRA} | {SPACE} | {ENTERO1})*"'"        { Token token = new Token(yytext(), "CADENA", yyline + 1, yycolumn + 1, Color.GREEN); lista.add(token); listaColores.add(token); }
+("'" | "‘")({LETRA} | {ENTERO1} | {TODO})({LETRA} | {SPACE} | {ENTERO1} | {TODO})*("'" | "’")        { Token token = new Token(yytext(), "CADENA", yyline + 1, yycolumn + 1, Color.GREEN); lista.add(token); listaColores.add(token); }
 //IDENTIFICADOR
 ({MINUSCULA} | {GUIONBAJO} | {ENTERO1})+                                     { Token token = new Token(yytext(), "IDENTIFICADOR", yyline + 1, yycolumn + 1, Color.MAGENTA); lista.add(token); listaColores.add(token); }
 {BOOLEANO}                                                                   { Token token = new Token(yytext(), "BOOLEANO", yyline + 1, yycolumn + 1, Color.BLUE); lista.add(token); listaColores.add(token); }

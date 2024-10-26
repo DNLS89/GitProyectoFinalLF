@@ -52,7 +52,7 @@ public class GestorTexto {
 
         procesarAnalizadorLexico();
 
-        //imprimirValores();
+        imprimirValores();
         imprimirMatrizColores();
 
         procesarAnalizadorSintactico();
@@ -105,20 +105,23 @@ public class GestorTexto {
     private void imprimirValores() {
         System.out.println("");
         System.out.println("Imprimiendo Tokens");
+        System.out.println("");
         for (Token token : tokens) {
             System.out.println(token);
         }
         
-        System.out.println("");
-        System.out.println("Imprimiendo Tokens Colores");
-        for (Token token : tokensColores) {
-            System.out.println(token);
-        }
+//        System.out.println("");
+//        System.out.println("Imprimiendo Tokens Colores");
+//        System.out.println("");
+//        for (Token token : tokensColores) {
+//            System.out.println(token);
+//        }
         
         
 
         System.out.println("");
         System.out.println("Imprimiendo Errores");
+        System.out.println("");
         for (Token tokenError : erroresLexico) {
             System.out.println(tokenError);
         }
@@ -144,7 +147,7 @@ public class GestorTexto {
     }
 
     private void procesarAnalizadorSintactico() {
-        AnalizadorDDL analizadorDDL = new AnalizadorDDL(tokens, lineasOriginal);
+        AnalizadorDDLyDML analizadorDDL = new AnalizadorDDLyDML(tokens, lineasOriginal);
         
         
         analizadorDDL.procesar();

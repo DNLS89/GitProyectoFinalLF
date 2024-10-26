@@ -1,11 +1,15 @@
 package LOGICA;
 
+import AutomatasDDL.AutomataAlter;
 import AutomatasDDL.AutomataCreate;
+import AutomatasDDL.AutomataDrop;
+import AutomatasDML.AutomataInsert;
+import AutomatasDML.AutomataSelect;
 import LOGICA.Token;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnalizadorDDL {
+public class AnalizadorDDLyDML {
 
     private List<Token> tokens;
     private String[] lineasOriginal;
@@ -13,7 +17,7 @@ public class AnalizadorDDL {
     private List<List<Token>> todosLosComandos = new ArrayList<>();
     // private List<List<Token>> comandosNoAceptados = new ArrayList<>();
 
-    public AnalizadorDDL(List<Token> tokens, String[] lineasOriginal) {
+    public AnalizadorDDLyDML(List<Token> tokens, String[] lineasOriginal) {
 
         this.tokens = tokens;
         this.lineasOriginal = lineasOriginal;
@@ -41,7 +45,8 @@ public class AnalizadorDDL {
         List<Token> comandoIndividual = null;
 
         for (Token token : tokens) {
-            if (token.getNombre().equals("CREATE") || token.getNombre().equals("ALTER")) {
+            if ((token.getNombre().equals("CREATE") || token.getNombre().equals("ALTER") || token.getNombre().equals("DROP")) && !guardarElementos
+                    || (token.getNombre().equals("INSERT")) || (token.getNombre().equals("SELECT"))) {
                 comandoIndividual = new ArrayList<>();
                 guardarElementos = true;
             }
@@ -55,6 +60,8 @@ public class AnalizadorDDL {
                 todosLosComandos.add(comandoIndividual);
             }
         }
+        
+        
 
     }
 
@@ -71,12 +78,27 @@ public class AnalizadorDDL {
     public boolean comandoCumpleRequisitos(List<Token> comandoIndividual) {
 
         AutomataCreate automataCreate = new AutomataCreate(tokens);
+        AutomataDrop automataDrop = new AutomataDrop();
+        AutomataAlter automataAlter = new AutomataAlter(tokens);
+        AutomataInsert automataInsert = new AutomataInsert(tokens);
+        AutomataSelect automataSelect = new AutomataSelect(tokens);
         
-        if (automataCreate.verificarPerteneceAlAutomata(comandoIndividual)) {
-            System.out.println("Cumple con formato Create");
-            return true;
+        if (comandoIndividual.get(0).getNombre().equals("CREATE")) {
+            
+            return automataCreate.verificarPerteneceAlAutomata(comandoIndividual);
+        } else if (comandoIndividual.get(0).getNombre().equals("DROP")) {
+            
+            return automataDrop.verificarPerteneceAlAutomata(comandoIndividual);
+        } else if (comandoIndividual.get(0).getNombre().equals("ALTER")) {
+            
+            return automataAlter.verificarPerteneceAlAutomata(comandoIndividual);
+        } else if (comandoIndividual.get(0).getNombre().equals("INSERT")) {
+            
+            return automataInsert.verificarPerteneceAlAutomata(comandoIndividual);
+        } else if (comandoIndividual.get(0).getNombre().equals("SELECT")) {
+            return automataSelect.verificarPerteneceAlAutomata(comandoIndividual);
         } else {
-            System.out.println("NO es formato Create");
+            System.out.println("NO cumple con los formatos anteriores");
             return false;
         }
 
