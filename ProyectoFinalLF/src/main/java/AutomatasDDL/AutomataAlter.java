@@ -1,23 +1,34 @@
 package AutomatasDDL;
 
 import LOGICA.Token;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AutomataAlter {
 
-    private List<Token> tokens;
+    //private List<Token> tokens;
     private String estado = "1";
     private char estadoTipoDeDatos = 'A';
+    
+    private List<List<String>> comandosAceptadosModificacion;
+    private List<String> comandoEnAceptacion = new ArrayList<>();
+    private List<String> datosTabla;
+    
 
-    public AutomataAlter(List<Token> tokens) {
-        this.tokens = tokens;
+    public AutomataAlter(List<List<String>> comandosAceptadosModificacion) {
+        //this.tokens = tokens;
+        
+        this.comandosAceptadosModificacion = comandosAceptadosModificacion;
     }
+    
+    
+
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
 
         for (int indiceToken = 0; indiceToken < comandoIndividual.size(); indiceToken++) {
             Token token = comandoIndividual.get(indiceToken);
-            System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo() + " estado " + estado);
+            //System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo() + " estado " + estado);
 
             switch (estado) {
                 case "1" -> {
@@ -321,7 +332,7 @@ public class AutomataAlter {
                     comprobarEsTipoDato(token);
 
                 case "E" -> {
-                    System.out.println("Token en el que detectó error ALTER: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
+                   // System.out.println("Token en el que detectó error ALTER: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
                     return false;
                     //break;
                 }
@@ -341,7 +352,7 @@ public class AutomataAlter {
     }
 
     private void comprobarEsTipoDato(Token tokenIndividual) {
-        System.out.println("Comprobando tipo de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+        //System.out.println("Comprobando tipo de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
         switch (estadoTipoDeDatos) {
             case 'A':
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -354,7 +365,7 @@ public class AutomataAlter {
 
                 } else if (tokenIndividual.getNombre().equals("VARCHAR")) {
                     estadoTipoDeDatos = 'B';
-                    System.out.println("ESTADO B");
+                    //System.out.println("ESTADO B");
                 } else if (tokenIndividual.getNombre().equals("DECIMAL")  || tokenIndividual.getNombre().equals("NUMERIC")) {
                     estadoTipoDeDatos = 'G';
                 } else {
@@ -444,9 +455,9 @@ public class AutomataAlter {
         }
 
         if (estado.equals("E")) {
-            System.out.println("");
-            System.out.println("Token error en tipo de datos: " + tokenIndividual);
-            System.out.println("");
+//            System.out.println("");
+//            System.out.println("Token error en tipo de datos: " + tokenIndividual);
+//            System.out.println("");
         }
     }
 }

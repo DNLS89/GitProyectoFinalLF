@@ -20,7 +20,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-public class GestorTexto {
+public class GestorPrograma {
 
     private String textoOriginal;
     private String[] lineasOriginal;
@@ -38,8 +38,9 @@ public class GestorTexto {
 
     private JButton btnOtrosReportes;
     private JButton btnReporteSintactico;
+    private JButton btnGenerarGrafico;
 
-    public GestorTexto() {
+    public GestorPrograma() {
     }
 
     public String getTextoOriginal() {
@@ -61,24 +62,53 @@ public class GestorTexto {
     public List<Token> getErroresLexico() {
         return erroresLexico;
     }
-    
+
     public void procesar(String textoOriginal, JTextPane panelTexto, JTextPane txtColores, JButton btnOtrosReportes,
-            JButton btnReporteSintactico) {
+            JButton btnReporteSintactico, JButton btnGenerarGrafico) {
         this.textoOriginal = textoOriginal;
         this.panelTexto = panelTexto;
         this.txtColores = txtColores;
         this.doc = txtColores.getStyledDocument();
         this.btnOtrosReportes = btnOtrosReportes;
         this.btnReporteSintactico = btnReporteSintactico;
+        this.btnGenerarGrafico = btnGenerarGrafico;
 
         obtenerMatrizLineas(textoOriginal);
 
         procesarAnalizadorLexico();
 
-        imprimirValores();
+        //imprimirValores();
         imprimirMatrizColores();
-        
+
         procesarAnalizadorSintactico();
+
+    }
+
+    public void generarGrafico() {
+        System.out.println("GRAFICOS -------------------------------------");
+        //Generar Grafico CREATE
+        if (!analizadorDDL.getComandosAceptadosCreate().isEmpty()) {
+            analizadorDDL.getComandosAceptadosCreate();
+            for (List<String> comando : analizadorDDL.getComandosAceptadosCreate()) {
+                
+                for (String elemento : comando) {
+                    System.out.println(elemento);
+                }
+                
+                
+            }
+            
+            GraphViz graph = new GraphViz(analizadorDDL.getComandosAceptadosCreate());
+            graph.generar("DiagramaCreate.dot");
+        }
+        
+        //Generar Grafico Modificadores
+        if (!analizadorDDL.getComandosAceptadosModificacion().isEmpty()) {
+            analizadorDDL.getComandosAceptadosCreate();
+            GraphViz graph = new GraphViz(analizadorDDL.getComandosAceptadosCreate());
+            graph.generar("DiagramaModificacion.dot");
+        }
+        
 
     }
 
@@ -121,7 +151,7 @@ public class GestorTexto {
         try {
             doc.insertString(doc.getLength(), "\n", attributeSet);
         } catch (BadLocationException ex) {
-            Logger.getLogger(GestorTexto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorPrograma.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -133,12 +163,12 @@ public class GestorTexto {
             System.out.println(token);
         }
 
-        System.out.println("");
-        System.out.println("Imprimiendo Tokens Colores");
-        System.out.println("");
-        for (Token token : tokensColores) {
-            System.out.println(token);
-        }
+//        System.out.println("");
+//        System.out.println("Imprimiendo Tokens Colores");
+//        System.out.println("");
+//        for (Token token : tokensColores) {
+//            System.out.println(token);
+//        }
 
         System.out.println("");
         System.out.println("Imprimiendo Errores");
@@ -172,13 +202,13 @@ public class GestorTexto {
             }
         } catch (BadLocationException ex) {
             System.out.println("Error imprimiendo colores");
-            Logger.getLogger(GestorTexto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorPrograma.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void procesarAnalizadorSintactico() {
-        
-        this.analizadorDDL = new AnalizadorDDLyDML(tokens, lineasOriginal, btnOtrosReportes, btnReporteSintactico);
+
+        this.analizadorDDL = new AnalizadorDDLyDML(tokens, lineasOriginal, btnOtrosReportes, btnReporteSintactico, btnGenerarGrafico);
 
         analizadorDDL.procesar();
 

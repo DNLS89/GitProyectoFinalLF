@@ -5,6 +5,14 @@ import java.util.List;
 
 public class AutomataDrop {
     private char estado = 'A';
+    
+    private List<List<String>> comandosAceptadosModificacion;
+
+    public AutomataDrop(List<List<String>> comandosAceptadosModificacion) {
+        this.comandosAceptadosModificacion = comandosAceptadosModificacion;
+    }
+    
+    
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
 
@@ -82,7 +90,7 @@ public class AutomataDrop {
                     break;
 
                 case 'E':
-                    System.out.println("Token en el que detectó error DROP: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
+                   // System.out.println("Token en el que detectó error DROP: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
                     return false;
                 //break;
 

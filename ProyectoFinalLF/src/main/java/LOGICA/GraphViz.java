@@ -3,21 +3,25 @@ package LOGICA;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GraphViz {
 
-    public GraphViz() {
+    private List<List<String>> comandosAceptadosCreate;
+
+    public GraphViz(List<List<String>> comandosAceptadosCreate) {
+        this.comandosAceptadosCreate = comandosAceptadosCreate;
     }
 
-    public void generar() {
-        escribirArchivo(obtenerCodigoGraphViz());
-        ejecutarArchivoGraphViz();
+    public void generar(String nombreArchivo) {
+        escribirArchivo(obtenerCodigoGraphViz(), nombreArchivo);
+        ejecutarArchivoGraphViz(nombreArchivo);
     }
 
-    public void ejecutarArchivoGraphViz() {
-        ProcessBuilder process = new ProcessBuilder("dot", "-Tpng", "-o", "Diagrama.png", "Diagrama.dot");
+    public void ejecutarArchivoGraphViz(String nombreArchivo) {
+        ProcessBuilder process = new ProcessBuilder("dot", "-Tpng", "-o", "Diagrama.png", nombreArchivo);
         process.redirectErrorStream(true);
         try {
             process.start();
@@ -29,17 +33,16 @@ public class GraphViz {
 
     public String obtenerCodigoGraphViz() {
 
-//        String[] letras = token.split("");
-//
-//        String codigoPorAgregar = "";
-//
-//        if (letras.length == 1) {
-//            codigoPorAgregar += ("        \"" + letras[0] + "\"\n");
-//        } else {
-//            for (int indiceLetra = 0; indiceLetra < letras.length - 1; indiceLetra++) {
-//                codigoPorAgregar += ("        \"" + letras[indiceLetra] + "\"->\"" + letras[indiceLetra + 1] + "\" [label = \"\"]\n");
-//            }
-//        }
+        String codigoPorAgregar = "";
+
+        for (List<String> comando : comandosAceptadosCreate) {
+
+            for (String elemento : comando) {
+                codigoPorAgregar += "  <tr>  <td> " + elemento + "</td></tr>\n";
+            }
+            codigoPorAgregar += "  <tr>  <td> </td></tr>\n";
+            codigoPorAgregar += "  <tr>  <td> </td></tr>\n";
+        }
 
         String codigo = "digraph {\n"
                 + "  graph [pad=\"0.5\", nodesep=\"0.5\", ranksep=\"2\" ]  //  splines=ortho]\n"
@@ -48,28 +51,21 @@ public class GraphViz {
                 + "\n"
                 + "Foo [label=<\n"
                 + "<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n"
-                
-                + "  <tr>  <td><i>Input Foo</i></td></tr>\n"
-                + "  <tr>  <td port=\"1\">one</td></tr>\n"
-                + "  <tr>  <td port=\"2\">two</td></tr>\n"
-                + "  <tr>  <td port=\"3\">three</td></tr>\n"
-                + "  <tr>  <td port=\"4\">four</td></tr>\n"
-                + "  <tr>  <td port=\"5\">five</td></tr>\n"
-                + "  <tr>  <td port=\"6\">six</td></tr>\n"
-                
+                + codigoPorAgregar
                 + "</table>>];\n"
                 + "\n"
                 + "\n"
                 + "}";
 
-        //System.out.println("Codigo del botón: " + codigo);
+        System.out.println(codigo);
+        
         return codigo;
     }
 
-    public void escribirArchivo(String codigo) {
+    public void escribirArchivo(String codigo, String nombreArchivo) {
 
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("Diagrama.dot"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo));
             writer.write(codigo);
             writer.close();
         } catch (IOException ex) {

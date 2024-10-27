@@ -1,0 +1,111 @@
+digraph {
+  graph [pad="0.5", nodesep="0.5", ranksep="2" ]  //  splines=ortho]
+  node  [shape=plain]
+ // rankdir=LR;  // makes a very small difference
+
+Foo [label=<
+<table border="0" cellborder="1" cellspacing="0">
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> empleados</td></tr>
+  <tr>  <td> id: SERIAL PRIMARY KEY </td></tr>
+  <tr>  <td> nombre: VARCHAR ( 100 ) NOT NULL </td></tr>
+  <tr>  <td> puesto: VARCHAR ( 50 </td></tr>
+  <tr>  <td> salario: DECIMAL ( 10 , 2 ) </td></tr>
+  <tr>  <td> departamento_id: INTEGER </td></tr>
+  <tr>  <td> email: VARCHAR ( 100 ) UNIQUE </td></tr>
+  <tr>  <td> fk_departamento: FOREIGN KEY</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+</table>>];
+
+
+}

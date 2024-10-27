@@ -1,6 +1,7 @@
 package LOGICA;
 
 import AutomatasDDL.AutomataAlter;
+import AutomatasDDL.AutomataCreate2;
 import AutomatasDDL.AutomataCreate;
 import AutomatasDDL.AutomataDrop;
 import AutomatasDML.AutomataInsert;
@@ -16,17 +17,22 @@ public class AnalizadorDDLyDML {
     private String[] lineasOriginal;
     private JButton btnOtrosReportes;
     private JButton btnReporteSintactico;
+    private JButton btnGenerarGrafico;
 
     private List<List<Token>> todosLosComandos = new ArrayList<>();
+    private List<List<String>> comandosAceptadosCreate = new ArrayList<>();
+    private List<List<String>> comandosAceptadosModificacion = new ArrayList<>();
+    
     // private List<List<Token>> comandosNoAceptados = new ArrayList<>();
 
     public AnalizadorDDLyDML(List<Token> tokens, String[] lineasOriginal, JButton btnOtrosReportes,
-            JButton btnReporteSintactico) {
+            JButton btnReporteSintactico, JButton btnGenerarGrafico) {
 
         this.tokens = tokens;
         this.lineasOriginal = lineasOriginal;
         this.btnOtrosReportes = btnOtrosReportes;
         this.btnReporteSintactico = btnReporteSintactico;
+        this.btnGenerarGrafico = btnGenerarGrafico;
 
     }
 
@@ -34,18 +40,30 @@ public class AnalizadorDDLyDML {
         return todosLosComandos;
     }
 
+    public List<List<String>> getComandosAceptadosCreate() {
+        return comandosAceptadosCreate;
+    }
+
+    public List<List<String>> getComandosAceptadosModificacion() {
+        return comandosAceptadosModificacion;
+    }
+    
+    
+    
     public void procesar() {
         extraerElementosDDL();
 
         imprimirComandos();
 
+        int indice = 0;
         for (List<Token> comandoIndividual : todosLosComandos) {
-            if (comandoCumpleRequisitos(comandoIndividual)) {
-                //Genrerar la imagen
-                GraphViz graph = new GraphViz();
-                graph.generar();
-
+            
+            if (comandoCumpleRequisitos(comandoIndividual, indice)) {
+                //Guarda los comandos para luego generar la imagen
+                btnGenerarGrafico.setVisible(true);
+                //comandosAceptadosCreate.add(comandoIndividual);
             }
+            indice++;
         }
 
     }
@@ -92,13 +110,15 @@ public class AnalizadorDDLyDML {
         }
     }
 
-    public boolean comandoCumpleRequisitos(List<Token> comandoIndividual) {
+    public boolean comandoCumpleRequisitos(List<Token> comandoIndividual, int indice) {
 
-        AutomataCreate automataCreate = new AutomataCreate(tokens);
-        AutomataDrop automataDrop = new AutomataDrop();
-        AutomataAlter automataAlter = new AutomataAlter(tokens);
-        AutomataInsert automataInsert = new AutomataInsert(tokens);
-        AutomataSelect automataSelect = new AutomataSelect(tokens);
+        //AutomataCreate automataCreate = new AutomataCreate(tokens, comandosAceptadosCreate);
+        AutomataCreate automataCreate = new AutomataCreate(todosLosComandos, indice, comandosAceptadosCreate);
+        AutomataDrop automataDrop = new AutomataDrop(comandosAceptadosModificacion);
+        //AutomataAlter automataAlter = new AutomataAlter(tokens, comandosAceptadosModificacion);
+        AutomataAlter automataAlter = new AutomataAlter(comandosAceptadosModificacion);
+        AutomataInsert automataInsert = new AutomataInsert(todosLosComandos, indice);
+        AutomataSelect automataSelect = new AutomataSelect(todosLosComandos, indice);
 
         if (comandoIndividual.get(0).getNombre().equals("CREATE")) {
 

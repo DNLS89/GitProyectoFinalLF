@@ -4,7 +4,7 @@ import LOGICA.Token;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AutomataCreate {
+public class AutomataCreate2 {
 
     //"A" es el estado 
     private char estado = 'A';
@@ -23,13 +23,9 @@ public class AutomataCreate {
     private List<List<String>> comandosAceptadosCreate;
     private List<String> comandoEnAceptacion = new ArrayList<>();
     private List<String> datosTabla;
-    
-    private List<List<Token>> todosLosComandos;
-    int indiceGENERAL;
 
-    public AutomataCreate(List<List<Token>> todosLosComandos, int indiceGENERAL, List<List<String>> comandosAceptadosCreate) {
-        this.todosLosComandos = todosLosComandos;
-        this.indiceGENERAL = indiceGENERAL;
+    public AutomataCreate2(List<Token> tokens, List<List<String>> comandosAceptadosCreate) {
+        this.tokens = tokens;
         this.comandosAceptadosCreate = comandosAceptadosCreate;
     }
 
@@ -38,10 +34,10 @@ public class AutomataCreate {
         for (int indiceToken = 0; indiceToken < comandoIndividual.size(); indiceToken++) {
 
             Token token = comandoIndividual.get(indiceToken);
-            //System.out.println("");
-            //System.out.println("ESTADOS: normal " + estado + " declaracion " + estadoDeclaracion
-            //        + " datos " + estadoTipoDeDatos + " estructu " + estadoEstructuraLlave);
-            //System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo());
+            System.out.println("");
+            System.out.println("ESTADOS: normal " + estado + " declaracion " + estadoDeclaracion
+                    + " datos " + estadoTipoDeDatos + " estructu " + estadoEstructuraLlave);
+            System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo());
 
             switch (estado) {
                 case 'A':
@@ -156,7 +152,7 @@ public class AutomataCreate {
                     }
                     break;
                 case 'E':
-                    //System.out.println("Token en el que detectó error CREATE: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
+                    System.out.println("Token en el que detectó error CREATE: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
                     return false;
                 //break;
 
@@ -164,18 +160,16 @@ public class AutomataCreate {
         }
 
         if (estado == 'D') {
-            System.out.println("Cumple con formato CREATE");
+            System.out.println("Cumple con formato Create");
             comandosAceptadosCreate.add(comandoEnAceptacion);
             return true;
-        } else {
-            System.out.println("No cumple con formate CREATE");
         }
 
         return false;
     }
 
     private void comprobarEsEstructuraDeclaracion(Token tokenIndividual, int indiceToken) {
-        //System.out.println("Comprobando estructura declaracion el token " + tokenIndividual.getNombre() + " estaod declara " + estadoDeclaracion);
+        System.out.println("Comprobando estructura declaracion el token " + tokenIndividual.getNombre() + " estaod declara " + estadoDeclaracion);
         String stringDatosTabla = "";
         switch (estadoDeclaracion) {
             case '1':
@@ -270,14 +264,14 @@ public class AutomataCreate {
         }
 
         if (estado == 'E') {
-//            System.out.println("");
-//            System.out.println("Token error en declaracion: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en declaracion: " + tokenIndividual);
+            System.out.println("");
         }
     }
 
     private void comprobarEsTipoDato(Token tokenIndividual, int indiceToken) {
-       // System.out.println("Comprobando tipo de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+        System.out.println("Comprobando tipo de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
         switch (estadoTipoDeDatos) {
             case 'A':
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -289,9 +283,9 @@ public class AutomataCreate {
                     estadoTipoDeDatos = 'A';
                     datosTabla.add(tokenIndividual.getNombre() + " ");
 
-                    if (todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("PRIMARY")
-                            || todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("NOT")
-                            || todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("UNIQUE")) {
+                    if (tokens.get(indiceToken + 1).getNombre().equals("PRIMARY")
+                            || tokens.get(indiceToken + 1).getNombre().equals("NOT")
+                            || tokens.get(indiceToken + 1).getNombre().equals("UNIQUE")) {
                         estadoDeclaracion = '3';
                     } else {
                         estado = 'I';
@@ -343,13 +337,15 @@ public class AutomataCreate {
                     case ")":
                         estadoTipoDeDatos = 'A';
 
-                        if (todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("PRIMARY")
-                                || todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("NOT")
-                                || todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("UNIQUE")) {
+                        if (tokens.get(indiceToken + 1).getNombre().equals("PRIMARY")
+                                || tokens.get(indiceToken + 1).getNombre().equals("NOT")
+                                || tokens.get(indiceToken + 1).getNombre().equals("UNIQUE")) {
+                            System.out.println("-------------------------PRUEBA1");
                             estadoDeclaracion = '3';
                         } else {
-//                            System.out.println("TOken siguiente en todos los TOKENS" + todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre());
-//                            System.out.println("Token acutal todos los TOKENS: " + todosLosComandos.get(indiceGENERAL).get(indiceToken) + " token apsado " + tokenIndividual);
+                            System.out.println("------------------------PRUEBA2");
+                            System.out.println("TOken siguiente" + tokens.get(indiceToken + 1).getNombre());
+                            System.out.println("Token acutal: " + tokens.get(indiceToken) + " token apsado " + tokenIndividual);
                             estado = 'I';
                             estadoDeclaracion = '1';
 
@@ -412,9 +408,9 @@ public class AutomataCreate {
                         estadoTipoDeDatos = 'A';
                         datosTabla.add(tokenIndividual.getNombre() + " ");
 
-                        if (todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("PRIMARY")
-                                || todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("NOT")
-                                || todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals("UNIQUE")) {
+                        if (tokens.get(indiceToken + 1).getNombre().equals("PRIMARY")
+                                || tokens.get(indiceToken + 1).getNombre().equals("NOT")
+                                || tokens.get(indiceToken + 1).getNombre().equals("UNIQUE")) {
                             estadoDeclaracion = '3';
                         } else {
                             estado = 'I';
@@ -436,14 +432,14 @@ public class AutomataCreate {
         }
 
         if (estado == 'E') {
-//            System.out.println("");
-//            System.out.println("Token error en tipo de datos: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en tipo de datos: " + tokenIndividual);
+            System.out.println("");
         }
     }
 
     private void comprobarEsEstructuraLlaves(Token tokenIndividual) {
-        //System.out.println("Comprobando estructura llaves " + tokenIndividual.getNombre() + " estaod declara " + estadoEstructuraLlave);
+        System.out.println("Comprobando estructura llaves " + tokenIndividual.getNombre() + " estaod declara " + estadoEstructuraLlave);
         switch (estadoEstructuraLlave) {
             case 'A':
                 switch (tokenIndividual.getNombre()) {
@@ -568,9 +564,9 @@ public class AutomataCreate {
         }
 
         if (estado == 'E') {
-//            System.out.println("");
-//            System.out.println("Token error en estructura llaves: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en estructura llaves: " + tokenIndividual);
+            System.out.println("");
         }
     }
 

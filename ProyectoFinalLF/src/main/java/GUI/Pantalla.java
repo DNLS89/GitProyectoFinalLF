@@ -1,6 +1,6 @@
 package GUI;
 
-import LOGICA.GestorTexto;
+import LOGICA.GestorPrograma;
 import LOGICA.Reportes;
 import java.awt.Color;
 import java.awt.Font;
@@ -14,7 +14,7 @@ import javax.swing.text.StyledDocument;
 
 public class Pantalla extends javax.swing.JFrame {
 
-    GestorTexto gestorTexto = new GestorTexto();
+    GestorPrograma gestorTexto = new GestorPrograma();
     Reportes reportes = new Reportes();
 
     public Pantalla() {
@@ -22,6 +22,7 @@ public class Pantalla extends javax.swing.JFrame {
         btnOtrosReportes.setVisible(false);
         btnReporteLexico.setVisible(false);
         btnReporteSintactico.setVisible(false);
+        btnGenerarGrafico.setVisible(false);
     }
 
     /**
@@ -37,13 +38,13 @@ public class Pantalla extends javax.swing.JFrame {
         btnAnalizar = new javax.swing.JButton();
         btnReporteLexico = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        btnGenerarGraficas = new javax.swing.JButton();
+        btnGenerarGrafico = new javax.swing.JButton();
+        btnReporteSintactico = new javax.swing.JButton();
+        btnOtrosReportes = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtPanel = new javax.swing.JTextPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
-        btnReporteSintactico = new javax.swing.JButton();
-        btnOtrosReportes = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,11 +64,12 @@ public class Pantalla extends javax.swing.JFrame {
 
         jButton1.setText("Archivo");
 
-        btnGenerarGraficas.setText("Generar Gráfica");
-
-        jScrollPane2.setViewportView(txtPanel);
-
-        jScrollPane1.setViewportView(jTextPane1);
+        btnGenerarGrafico.setText("Generar Gráfico");
+        btnGenerarGrafico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarGraficoActionPerformed(evt);
+            }
+        });
 
         btnReporteSintactico.setText("Errores Sintáctico");
         btnReporteSintactico.addActionListener(new java.awt.event.ActionListener() {
@@ -83,63 +85,73 @@ public class Pantalla extends javax.swing.JFrame {
             }
         });
 
+        txtPanel.setMaximumSize(new java.awt.Dimension(62, 22));
+        jScrollPane2.setViewportView(txtPanel);
+
+        jTextPane1.setMaximumSize(new java.awt.Dimension(62, 22));
+        jScrollPane1.setViewportView(jTextPane1);
+
         javax.swing.GroupLayout contenido5Layout = new javax.swing.GroupLayout(contenido5);
         contenido5.setLayout(contenido5Layout);
         contenido5Layout.setHorizontalGroup(
             contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contenido5Layout.createSequentialGroup()
-                .addGap(61, 61, 61)
-                .addComponent(btnAnalizar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(contenido5Layout.createSequentialGroup()
-                .addGap(0, 43, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47))
             .addGroup(contenido5Layout.createSequentialGroup()
                 .addGap(96, 96, 96)
-                .addComponent(jButton1)
-                .addGap(64, 64, 64)
-                .addComponent(btnGenerarGraficas)
-                .addGap(49, 49, 49)
-                .addComponent(btnReporteLexico)
-                .addGap(47, 47, 47)
-                .addComponent(btnReporteSintactico)
-                .addGap(58, 58, 58)
-                .addComponent(btnOtrosReportes)
+                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(contenido5Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(64, 64, 64)
+                        .addComponent(btnGenerarGrafico)
+                        .addGap(49, 49, 49)
+                        .addComponent(btnReporteLexico)
+                        .addGap(47, 47, 47)
+                        .addComponent(btnReporteSintactico)
+                        .addGap(58, 58, 58)
+                        .addComponent(btnOtrosReportes))
+                    .addComponent(btnAnalizar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         contenido5Layout.setVerticalGroup(
             contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenido5Layout.createSequentialGroup()
                 .addGap(44, 44, 44)
-                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnReporteLexico)
-                    .addComponent(jButton1)
-                    .addComponent(btnGenerarGraficas)
-                    .addComponent(btnReporteSintactico)
-                    .addComponent(btnOtrosReportes))
-                .addGap(32, 32, 32)
-                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(contenido5Layout.createSequentialGroup()
+                        .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnReporteLexico)
+                            .addComponent(jButton1)
+                            .addComponent(btnGenerarGrafico)
+                            .addComponent(btnReporteSintactico)
+                            .addComponent(btnOtrosReportes))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addComponent(btnAnalizar)
-                .addGap(25, 25, 25))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(contenido5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 25, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(contenido5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(contenido5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -151,7 +163,7 @@ public class Pantalla extends javax.swing.JFrame {
         if (!txtPanel.getText().isBlank()) {
             
             btnReporteLexico.setVisible(true);
-            gestorTexto.procesar(txtPanel.getText(), txtPanel, jTextPane1, btnOtrosReportes, btnReporteSintactico);
+            gestorTexto.procesar(txtPanel.getText(), txtPanel, jTextPane1, btnOtrosReportes, btnReporteSintactico, btnGenerarGrafico);
             
         } else {
             JOptionPane.showMessageDialog(null, "No hay elementos ingresados", "ERROR", JOptionPane.PLAIN_MESSAGE);
@@ -177,13 +189,18 @@ public class Pantalla extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnOtrosReportesActionPerformed
 
+    private void btnGenerarGraficoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarGraficoActionPerformed
+        // TODO add your handling code here:
+        gestorTexto.generarGrafico();
+    }//GEN-LAST:event_btnGenerarGraficoActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalizar;
-    private javax.swing.JButton btnGenerarGraficas;
+    private javax.swing.JButton btnGenerarGrafico;
     private javax.swing.JButton btnOtrosReportes;
     private javax.swing.JButton btnReporteLexico;
     private javax.swing.JButton btnReporteSintactico;

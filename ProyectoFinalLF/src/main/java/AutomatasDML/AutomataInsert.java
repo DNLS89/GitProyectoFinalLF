@@ -5,19 +5,23 @@ import java.util.List;
 
 public class AutomataInsert {
 
-    private List<Token> tokens;
+    //private List<Token> tokens;
     private String estado = "1";
     private char estadoTipoDeDatos = 'A';
+    private List<List<Token>> todosLosComandos;
+    int indiceGENERAL;
 
-    public AutomataInsert(List<Token> tokens) {
-        this.tokens = tokens;
+    public AutomataInsert(List<List<Token>> todosLosComandos, int indiceGENERAL) {
+        //this.tokens = tokens;
+        this.todosLosComandos = todosLosComandos;
+        this.indiceGENERAL = indiceGENERAL;
     }
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
 
         for (int indiceToken = 0; indiceToken < comandoIndividual.size(); indiceToken++) {
             Token token = comandoIndividual.get(indiceToken);
-            System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo() + " estado " + estado);
+            //System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo() + " estado " + estado);
 
             switch (estado) {
                 case "1" -> {
@@ -114,7 +118,7 @@ public class AutomataInsert {
                     };
                 }
                 case "E" -> {
-                    System.out.println("Token en el que detectó error DML INSERT: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
+                    //System.out.println("Token en el que detectó error DML INSERT: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
                     return false;
                     //break;
                 }
@@ -134,17 +138,17 @@ public class AutomataInsert {
     }
 
     private void comprobarEsEstructuraDato(Token tokenIndividual, int indice) {
-        System.out.println("Comprobando estructura de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+       // System.out.println("Comprobando estructura de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
         switch (estadoTipoDeDatos) {
             case 'A':
                 //Abajo entra a la letra y en base a eso cambia de estado
 
                 if (tokenIndividual.getTipo().equals("ENTERO") || tokenIndividual.getTipo().equals("DECIMAL")) {
 
-                    if (!(tokens.get(indice + 1).getNombre().equals("+") || tokens.get(indice + 1).getNombre().equals("*")
-                            || tokens.get(indice + 1).getNombre().equals("-") || tokens.get(indice + 1).getNombre().equals("/")
-                            || tokens.get(indice + 1).getNombre().equals("OR") || tokens.get(indice + 1).getNombre().equals("<")
-                            || tokens.get(indice + 1).getNombre().equals(">"))) {
+                    if (!(todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("+") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("*")
+                            || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("-") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("/")
+                            || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("OR") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<")
+                            || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
                         estado = "10";
                         estadoTipoDeDatos = 'A';
                     } else {
@@ -155,7 +159,7 @@ public class AutomataInsert {
                     estadoTipoDeDatos = 'C';
                 } else if (tokenIndividual.getTipo().equals("FECHA")) {
                     
-                    if (!(tokens.get(indice + 1).getNombre().equals("<") || tokens.get(indice + 1).getNombre().equals(">"))) {
+                    if (!(todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
                         estadoTipoDeDatos = 'A';
                         estado = "10";
                     } else {
@@ -201,10 +205,10 @@ public class AutomataInsert {
                     
                     
                     
-                    if (!(tokens.get(indice + 1).getNombre().equals("+") || tokens.get(indice + 1).getNombre().equals("*")
-                            || tokens.get(indice + 1).getNombre().equals("-") || tokens.get(indice + 1).getNombre().equals("/")
-                            || tokens.get(indice + 1).getNombre().equals("OR") || tokens.get(indice + 1).getNombre().equals("<")
-                            || tokens.get(indice + 1).getNombre().equals(">"))) {
+                    if (!(todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("+") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("*")
+                            || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("-") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("/")
+                            || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("OR") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<")
+                            || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
                         estado = "10";
                         estadoTipoDeDatos = 'A';
                     } else {
@@ -230,10 +234,10 @@ public class AutomataInsert {
                 switch (tokenIndividual.getTipo()) {
                     case "FECHA":
                         
-                        if (!(tokens.get(indice + 1).getNombre().equals("+") || tokens.get(indice + 1).getNombre().equals("*")
-                                || tokens.get(indice + 1).getNombre().equals("-") || tokens.get(indice + 1).getNombre().equals("/")
-                                || tokens.get(indice + 1).getNombre().equals("OR") || tokens.get(indice + 1).getNombre().equals("<")
-                                || tokens.get(indice + 1).getNombre().equals(">"))) {
+                        if (!(todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("+") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("*")
+                                || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("-") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("/")
+                                || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("OR") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<")
+                                || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
                             estado = "10";
                             estadoTipoDeDatos = 'A';
                         } else {
@@ -248,9 +252,9 @@ public class AutomataInsert {
         }
 
         if (estado.equals("E")) {
-            System.out.println("");
-            System.out.println("Token error en estructura de datos: " + tokenIndividual);
-            System.out.println("");
+//            System.out.println("");
+//            System.out.println("Token error en estructura de datos: " + tokenIndividual);
+//            System.out.println("");
         }
     }
 }
