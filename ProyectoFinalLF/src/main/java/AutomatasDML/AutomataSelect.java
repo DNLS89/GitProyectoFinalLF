@@ -354,7 +354,6 @@ public class AutomataSelect {
             }
         } else if (estadoSentencia.equals("23")) {
             if (tokenIndividual.getTipo().equals("IDENTIFICADOR")) {
-                System.out.println("TOKEN SIGUIENTE: " + tokens.get(indiceToken + 1));
                 if (tokens.get(indiceToken + 1).getNombre().equals(".")) {
                     System.out.println("PRUEBA1");
                     estadoSentencia = "24";
@@ -391,7 +390,53 @@ public class AutomataSelect {
     }
 
     private void comprobarEsGroup(Token tokenIndividual, int indiceToken) {
-        System.out.println("PREUBA GROUP");
+        System.out.println("Comprobando es seleccion GROUP " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
+
+        if (estadoSentencia.equals(estadoInicialSentencia)) {
+            if (tokenIndividual.getNombre().equals("GROUP")) {
+                estadoSentencia = "28";
+            } else {
+                estado = "E";
+            }
+        } else if (estadoSentencia.equals("28")) {
+            if (tokenIndividual.getNombre().equals("BY")) {
+                estadoSentencia = "29";
+            } else {
+                estado = "E";
+            }
+        } else if (estadoSentencia.equals("29")) {
+            if (tokenIndividual.getTipo().equals("IDENTIFICADOR")) {
+                if (tokens.get(indiceToken + 1).getNombre().equals(".")) {
+                    System.out.println("PRUEBA1");
+                    estadoSentencia = "30";
+                } else if (tokens.get(indiceToken + 1).getNombre().equals(";")) {
+                    System.out.println("PRUEBA2");
+                    estadoSentencia = estadoInicialSentencia;
+                    estado = estadoFinalSentencia;
+                    comprobarEsGroup = false;
+                } else {
+                    System.out.println("PRUEBA3");
+                    estado = "E";
+                }
+
+            } else {
+                estado = "E";
+            }
+        } else if (estadoSentencia.equals("30")) {
+            if (tokenIndividual.getTipo().equals("IDENTIFICADOR")) {
+                estadoSentencia = estadoInicialSentencia;
+                estado = estadoFinalSentencia;
+                comprobarEsGroup = false;
+            } else {
+                estado = "E";
+            }
+        }
+
+        if (estado.equals("E")) {
+            System.out.println("");
+            System.out.println("Token error en GROUP: " + tokenIndividual);
+            System.out.println("");
+        }
     }
 
     private void comprobarEsOrder(Token tokenIndividual, int indiceToken) {
@@ -404,10 +449,24 @@ public class AutomataSelect {
                 estado = "E";
             }
         } else if (estadoSentencia.equals("29")) {
-            if (tokenIndividual.getTipo().equals("ENTERO")) {
+            if (tokenIndividual.getNombre().equals("BY")) {
+                estadoSentencia = "30";
+            } else {
+                estado = "E";
+            }
+        } else if (estadoSentencia.equals("30")) {
+            if (tokenIndividual.getTipo().equals("IDENTIFICADOR")) {
+                estadoSentencia = "31";
+            } else {
+                estado = "E";
+            }
+        } else if (estadoSentencia.equals("31")) {
+            if (tokenIndividual.getNombre().equals(",")) {
+                estadoSentencia = "30";
+            } else if (tokenIndividual.getNombre().equals("DESC") || tokenIndividual.getNombre().equals("ASC")) {
                 estadoSentencia = estadoInicialSentencia;
                 estado = estadoFinalSentencia;
-                comprobarEsLimit = false;
+                comprobarEsOrder = false;
             } else {
                 estado = "E";
             }

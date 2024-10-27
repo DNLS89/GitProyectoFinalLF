@@ -15,9 +15,13 @@ import javax.swing.text.StyledDocument;
 public class Pantalla extends javax.swing.JFrame {
 
     GestorTexto gestorTexto = new GestorTexto();
+    Reportes reportes = new Reportes();
 
     public Pantalla() {
         initComponents();
+        btnOtrosReportes.setVisible(false);
+        btnReporteLexico.setVisible(false);
+        btnReporteSintactico.setVisible(false);
     }
 
     /**
@@ -30,24 +34,18 @@ public class Pantalla extends javax.swing.JFrame {
     private void initComponents() {
 
         contenido5 = new javax.swing.JPanel();
-        btnGenerarHTML = new javax.swing.JButton();
         btnAnalizar = new javax.swing.JButton();
-        btnReporteTokens = new javax.swing.JButton();
+        btnReporteLexico = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         btnGenerarGraficas = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtPanel = new javax.swing.JTextPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtColores = new javax.swing.JTextPane();
+        jTextPane1 = new javax.swing.JTextPane();
+        btnReporteSintactico = new javax.swing.JButton();
+        btnOtrosReportes = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        btnGenerarHTML.setText("Generar HTML");
-        btnGenerarHTML.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGenerarHTMLActionPerformed(evt);
-            }
-        });
 
         btnAnalizar.setText("Analizar");
         btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
@@ -56,10 +54,10 @@ public class Pantalla extends javax.swing.JFrame {
             }
         });
 
-        btnReporteTokens.setText("Reportes");
-        btnReporteTokens.addActionListener(new java.awt.event.ActionListener() {
+        btnReporteLexico.setText("Errores Léxicos");
+        btnReporteLexico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReporteTokensActionPerformed(evt);
+                btnReporteLexicoActionPerformed(evt);
             }
         });
 
@@ -69,7 +67,21 @@ public class Pantalla extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(txtPanel);
 
-        jScrollPane1.setViewportView(txtColores);
+        jScrollPane1.setViewportView(jTextPane1);
+
+        btnReporteSintactico.setText("Errores Sintáctico");
+        btnReporteSintactico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteSintacticoActionPerformed(evt);
+            }
+        });
+
+        btnOtrosReportes.setText("Otros Reportes");
+        btnOtrosReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOtrosReportesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout contenido5Layout = new javax.swing.GroupLayout(contenido5);
         contenido5.setLayout(contenido5Layout);
@@ -78,35 +90,36 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(contenido5Layout.createSequentialGroup()
                 .addGap(61, 61, 61)
                 .addComponent(btnAnalizar)
-                .addContainerGap(1027, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(contenido5Layout.createSequentialGroup()
-                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(contenido5Layout.createSequentialGroup()
-                        .addGap(96, 96, 96)
-                        .addComponent(jButton1)
-                        .addGap(64, 64, 64)
-                        .addComponent(btnGenerarGraficas)
-                        .addGap(59, 59, 59)
-                        .addComponent(btnGenerarHTML)
-                        .addGap(47, 47, 47))
-                    .addGroup(contenido5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)))
-                .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnReporteTokens)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(0, 43, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(contenido5Layout.createSequentialGroup()
+                .addGap(96, 96, 96)
+                .addComponent(jButton1)
+                .addGap(64, 64, 64)
+                .addComponent(btnGenerarGraficas)
+                .addGap(49, 49, 49)
+                .addComponent(btnReporteLexico)
+                .addGap(47, 47, 47)
+                .addComponent(btnReporteSintactico)
+                .addGap(58, 58, 58)
+                .addComponent(btnOtrosReportes)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         contenido5Layout.setVerticalGroup(
             contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contenido5Layout.createSequentialGroup()
                 .addGap(44, 44, 44)
                 .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGenerarHTML)
-                    .addComponent(btnReporteTokens)
+                    .addComponent(btnReporteLexico)
                     .addComponent(jButton1)
-                    .addComponent(btnGenerarGraficas))
+                    .addComponent(btnGenerarGraficas)
+                    .addComponent(btnReporteSintactico)
+                    .addComponent(btnOtrosReportes))
                 .addGap(32, 32, 32)
                 .addGroup(contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
@@ -137,31 +150,32 @@ public class Pantalla extends javax.swing.JFrame {
 
         if (!txtPanel.getText().isBlank()) {
             
+            btnReporteLexico.setVisible(true);
+            gestorTexto.procesar(txtPanel.getText(), txtPanel, jTextPane1, btnOtrosReportes, btnReporteSintactico);
             
-            gestorTexto.procesar(txtPanel.getText(), txtPanel, txtColores);
-
-            
-
-
         } else {
             JOptionPane.showMessageDialog(null, "No hay elementos ingresados", "ERROR", JOptionPane.PLAIN_MESSAGE);
         }
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
-    private void btnReporteTokensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteTokensActionPerformed
+    private void btnReporteLexicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteLexicoActionPerformed
         // TODO add your handling code here:
-
+        reportes.reporte("ERRORESTokens", gestorTexto.getErroresLexico(), 4);
         //gestorTexto.reporteTokens();
 
-    }//GEN-LAST:event_btnReporteTokensActionPerformed
+    }//GEN-LAST:event_btnReporteLexicoActionPerformed
 
-    private void btnGenerarHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarHTMLActionPerformed
-//        if (!lineNumber.getText().isBlank()) {
-//            gestorTexto.generarHTML();
-//        } else {
-//            JOptionPane.showMessageDialog(null, "No hay elementos ingresados", "ERROR", JOptionPane.PLAIN_MESSAGE);
-//        }
-    }//GEN-LAST:event_btnGenerarHTMLActionPerformed
+    private void btnReporteSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteSintacticoActionPerformed
+        // TODO add your handling code here:
+        //reportes.reporte("Sintacticos", ERRORESSINTACTICOS, 5);
+    }//GEN-LAST:event_btnReporteSintacticoActionPerformed
+
+    private void btnOtrosReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtrosReportesActionPerformed
+        // TODO add your handling code here:
+        reportes.setTodosLosComandos(gestorTexto.getAnalizadorDDL().getTodosLosComandos());
+        reportes.obtenerOtrosReportes();
+        
+    }//GEN-LAST:event_btnOtrosReportesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -170,13 +184,14 @@ public class Pantalla extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton btnGenerarGraficas;
-    private javax.swing.JButton btnGenerarHTML;
-    private javax.swing.JButton btnReporteTokens;
+    private javax.swing.JButton btnOtrosReportes;
+    private javax.swing.JButton btnReporteLexico;
+    private javax.swing.JButton btnReporteSintactico;
     private javax.swing.JPanel contenido5;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextPane txtColores;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTextPane txtPanel;
     // End of variables declaration//GEN-END:variables
 }

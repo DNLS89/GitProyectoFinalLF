@@ -8,20 +8,30 @@ import AutomatasDML.AutomataSelect;
 import LOGICA.Token;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 
 public class AnalizadorDDLyDML {
 
     private List<Token> tokens;
     private String[] lineasOriginal;
+    private JButton btnOtrosReportes;
+    private JButton btnReporteSintactico;
 
     private List<List<Token>> todosLosComandos = new ArrayList<>();
     // private List<List<Token>> comandosNoAceptados = new ArrayList<>();
 
-    public AnalizadorDDLyDML(List<Token> tokens, String[] lineasOriginal) {
+    public AnalizadorDDLyDML(List<Token> tokens, String[] lineasOriginal, JButton btnOtrosReportes,
+            JButton btnReporteSintactico) {
 
         this.tokens = tokens;
         this.lineasOriginal = lineasOriginal;
+        this.btnOtrosReportes = btnOtrosReportes;
+        this.btnReporteSintactico = btnReporteSintactico;
 
+    }
+
+    public List<List<Token>> getTodosLosComandos() {
+        return todosLosComandos;
     }
 
     public void procesar() {
@@ -32,7 +42,9 @@ public class AnalizadorDDLyDML {
         for (List<Token> comandoIndividual : todosLosComandos) {
             if (comandoCumpleRequisitos(comandoIndividual)) {
                 //Genrerar la imagen
-                
+                GraphViz graph = new GraphViz();
+                graph.generar();
+
             }
         }
 
@@ -49,6 +61,11 @@ public class AnalizadorDDLyDML {
                     || (token.getNombre().equals("INSERT")) || (token.getNombre().equals("SELECT"))) {
                 comandoIndividual = new ArrayList<>();
                 guardarElementos = true;
+
+                btnOtrosReportes.setVisible(true);
+                btnReporteSintactico.setVisible(true);
+
+                //Muestra botones reportes
             }
 
             if (guardarElementos) {
@@ -60,18 +77,18 @@ public class AnalizadorDDLyDML {
                 todosLosComandos.add(comandoIndividual);
             }
         }
-        
-        
 
     }
 
     public void imprimirComandos() {
-        for (List<Token> comandoIndividual : todosLosComandos) {
-            for (Token token : comandoIndividual) {
-                System.out.print(token.getNombre() + "");
+        if (!todosLosComandos.isEmpty()) {
+            for (List<Token> comandoIndividual : todosLosComandos) {
+                for (Token token : comandoIndividual) {
+                    System.out.print(token.getNombre() + "");
 
+                }
+                System.out.println(" ");
             }
-            System.out.println(" ");
         }
     }
 
@@ -82,18 +99,18 @@ public class AnalizadorDDLyDML {
         AutomataAlter automataAlter = new AutomataAlter(tokens);
         AutomataInsert automataInsert = new AutomataInsert(tokens);
         AutomataSelect automataSelect = new AutomataSelect(tokens);
-        
+
         if (comandoIndividual.get(0).getNombre().equals("CREATE")) {
-            
+
             return automataCreate.verificarPerteneceAlAutomata(comandoIndividual);
         } else if (comandoIndividual.get(0).getNombre().equals("DROP")) {
-            
+
             return automataDrop.verificarPerteneceAlAutomata(comandoIndividual);
         } else if (comandoIndividual.get(0).getNombre().equals("ALTER")) {
-            
+
             return automataAlter.verificarPerteneceAlAutomata(comandoIndividual);
         } else if (comandoIndividual.get(0).getNombre().equals("INSERT")) {
-            
+
             return automataInsert.verificarPerteneceAlAutomata(comandoIndividual);
         } else if (comandoIndividual.get(0).getNombre().equals("SELECT")) {
             return automataSelect.verificarPerteneceAlAutomata(comandoIndividual);
@@ -102,7 +119,6 @@ public class AnalizadorDDLyDML {
             return false;
         }
 
-        
     }
 
 }

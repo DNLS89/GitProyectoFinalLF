@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -31,6 +32,13 @@ public class GestorTexto {
     private List<Token> tokensColores;
     private List<Token> erroresLexico;
 
+    private List<List<Token>> todosLosComandos;
+    private AnalizadorDDLyDML analizadorDDL;
+    private Reportes reportes = new Reportes();
+
+    private JButton btnOtrosReportes;
+    private JButton btnReporteSintactico;
+
     public GestorTexto() {
     }
 
@@ -42,11 +50,26 @@ public class GestorTexto {
         this.textoOriginal = textoOriginal;
     }
 
-    public void procesar(String textoOriginal, JTextPane panelTexto, JTextPane txtColores) {
+    public AnalizadorDDLyDML getAnalizadorDDL() {
+        return analizadorDDL;
+    }
+
+    public void setAnalizadorDDL(AnalizadorDDLyDML analizadorDDL) {
+        this.analizadorDDL = analizadorDDL;
+    }
+
+    public List<Token> getErroresLexico() {
+        return erroresLexico;
+    }
+    
+    public void procesar(String textoOriginal, JTextPane panelTexto, JTextPane txtColores, JButton btnOtrosReportes,
+            JButton btnReporteSintactico) {
         this.textoOriginal = textoOriginal;
         this.panelTexto = panelTexto;
         this.txtColores = txtColores;
         this.doc = txtColores.getStyledDocument();
+        this.btnOtrosReportes = btnOtrosReportes;
+        this.btnReporteSintactico = btnReporteSintactico;
 
         obtenerMatrizLineas(textoOriginal);
 
@@ -54,7 +77,7 @@ public class GestorTexto {
 
         imprimirValores();
         imprimirMatrizColores();
-
+        
         procesarAnalizadorSintactico();
 
     }
@@ -109,15 +132,13 @@ public class GestorTexto {
         for (Token token : tokens) {
             System.out.println(token);
         }
-        
-//        System.out.println("");
-//        System.out.println("Imprimiendo Tokens Colores");
-//        System.out.println("");
-//        for (Token token : tokensColores) {
-//            System.out.println(token);
-//        }
-        
-        
+
+        System.out.println("");
+        System.out.println("Imprimiendo Tokens Colores");
+        System.out.println("");
+        for (Token token : tokensColores) {
+            System.out.println(token);
+        }
 
         System.out.println("");
         System.out.println("Imprimiendo Errores");
@@ -129,8 +150,17 @@ public class GestorTexto {
 
     private void imprimirMatrizColores() {
         //Colores
+
+        int indice = 0;
+
         try {
             for (Token token : tokensColores) {
+
+                //Lo de abajo es para imprimir el número de Línea
+                if (indice != token.getFila()) {
+                    doc.insertString(doc.getLength(), "|" + token.getFila() + "|  ", attributeSet);
+                    indice = token.getFila();
+                }
 
                 StyleConstants.setForeground(attributeSet, token.getColorToken());
                 txtColores.setCharacterAttributes(attributeSet, true);
@@ -147,12 +177,10 @@ public class GestorTexto {
     }
 
     private void procesarAnalizadorSintactico() {
-        AnalizadorDDLyDML analizadorDDL = new AnalizadorDDLyDML(tokens, lineasOriginal);
         
-        
-        analizadorDDL.procesar();
+        this.analizadorDDL = new AnalizadorDDLyDML(tokens, lineasOriginal, btnOtrosReportes, btnReporteSintactico);
 
-        
+        analizadorDDL.procesar();
 
     }
 }
