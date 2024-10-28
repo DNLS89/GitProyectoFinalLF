@@ -15,8 +15,10 @@ LOGICA/GraphViz.class
 LOGICA/GestorPrograma.class
 GUI/Pantalla$1.class
 GUI/Pantalla$5.class
+AutomatasDML/AutomataDelete.class
 AutomatasDDL/AutomataCreate.class
 AutomatasDML/AutomataSelect.class
 LOGICA/AnalizadorDDLyDML.class
 AutomatasDDL/AutomataDrop.class
+AutomatasDML/AutomataUpdate.class
 GUI/Pantalla$2.class

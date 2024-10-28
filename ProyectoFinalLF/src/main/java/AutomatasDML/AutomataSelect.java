@@ -25,6 +25,8 @@ public class AutomataSelect {
     private boolean comprobarEsOrder = false;
     private boolean comprobarEsLimit = false;
     
+    
+    
     private boolean funcionAgregacion2 = false;
 
     private boolean terminaEnRamaSuperior = false;

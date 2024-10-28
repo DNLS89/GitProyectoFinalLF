@@ -4,6 +4,7 @@ import AutomatasDDL.AutomataAlter;
 import AutomatasDDL.AutomataCreate2;
 import AutomatasDDL.AutomataCreate;
 import AutomatasDDL.AutomataDrop;
+import AutomatasDML.AutomataDelete;
 import AutomatasDML.AutomataInsert;
 import AutomatasDML.AutomataSelect;
 import LOGICA.Token;
@@ -80,7 +81,7 @@ public class AnalizadorDDLyDML {
 
         for (Token token : tokens) {
             if ((token.getNombre().equals("CREATE") || token.getNombre().equals("ALTER") || token.getNombre().equals("DROP")) && !guardarElementos
-                    || (token.getNombre().equals("INSERT")) || (token.getNombre().equals("SELECT"))) {
+                    || (token.getNombre().equals("INSERT")) || (token.getNombre().equals("SELECT")) || (token.getNombre().equals("DELETE"))) {
                 comandoIndividual = new ArrayList<>();
                 guardarElementos = true;
 
@@ -127,6 +128,8 @@ public class AnalizadorDDLyDML {
         AutomataAlter automataAlter = new AutomataAlter(comandosAceptadosModificacion);
         AutomataInsert automataInsert = new AutomataInsert(todosLosComandos, indice);
         AutomataSelect automataSelect = new AutomataSelect(todosLosComandos, indice);
+        
+        AutomataDelete automataDelete = new AutomataDelete(todosLosComandos, indice);
 
         if (comandoIndividual.get(0).getNombre().equals("CREATE")) {
 
@@ -142,6 +145,9 @@ public class AnalizadorDDLyDML {
             return automataInsert.verificarPerteneceAlAutomata(comandoIndividual);
         } else if (comandoIndividual.get(0).getNombre().equals("SELECT")) {
             return automataSelect.verificarPerteneceAlAutomata(comandoIndividual);
+        } else if (comandoIndividual.get(0).getNombre().equals("DELETE")) {
+            
+            return automataDelete.verificarPerteneceAlAutomata(comandoIndividual);
         } else {
             System.out.println("NO cumple con los formatos anteriores");
             return false;
