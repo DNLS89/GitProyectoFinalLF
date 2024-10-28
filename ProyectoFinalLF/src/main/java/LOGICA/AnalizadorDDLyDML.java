@@ -121,7 +121,7 @@ public class AnalizadorDDLyDML {
     public boolean comandoCumpleRequisitos(List<Token> comandoIndividual, int indice) {
 
         //AutomataCreate automataCreate = new AutomataCreate(tokens, comandosAceptadosCreate);
-        AutomataCreate automataCreate = new AutomataCreate(todosLosComandos, indice, comandosAceptadosCreate);
+        AutomataCreate automataCreate = new AutomataCreate(todosLosComandos, indice, comandosAceptadosCreate, erroresSintacticos);
         AutomataDrop automataDrop = new AutomataDrop(comandosAceptadosModificacion);
         //AutomataAlter automataAlter = new AutomataAlter(tokens, comandosAceptadosModificacion);
         AutomataAlter automataAlter = new AutomataAlter(comandosAceptadosModificacion);

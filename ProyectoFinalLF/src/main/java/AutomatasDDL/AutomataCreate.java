@@ -24,13 +24,16 @@ public class AutomataCreate {
     private List<String> comandoEnAceptacion = new ArrayList<>();
     private List<String> datosTabla;
     
+    private List<Token> erroresSintacticos;
+    
     private List<List<Token>> todosLosComandos;
     int indiceGENERAL;
 
-    public AutomataCreate(List<List<Token>> todosLosComandos, int indiceGENERAL, List<List<String>> comandosAceptadosCreate) {
+    public AutomataCreate(List<List<Token>> todosLosComandos, int indiceGENERAL, List<List<String>> comandosAceptadosCreate, List<Token> erroresSintacticos) {
         this.todosLosComandos = todosLosComandos;
         this.indiceGENERAL = indiceGENERAL;
         this.comandosAceptadosCreate = comandosAceptadosCreate;
+        this.erroresSintacticos = erroresSintacticos;
     }
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
