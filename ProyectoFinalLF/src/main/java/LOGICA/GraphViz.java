@@ -15,13 +15,13 @@ public class GraphViz {
         this.comandosAceptadosCreate = comandosAceptadosCreate;
     }
 
-    public void generar(String nombreArchivo) {
-        escribirArchivo(obtenerCodigoGraphViz(), nombreArchivo);
-        ejecutarArchivoGraphViz(nombreArchivo);
+    public void generar(String nombreArchivoPNG, String nombreArchivoDot) {
+        escribirArchivo(obtenerCodigoGraphViz(), nombreArchivoDot);
+        ejecutarArchivoGraphViz(nombreArchivoPNG, nombreArchivoDot);
     }
 
-    public void ejecutarArchivoGraphViz(String nombreArchivo) {
-        ProcessBuilder process = new ProcessBuilder("dot", "-Tpng", "-o", "Diagrama.png", nombreArchivo);
+    public void ejecutarArchivoGraphViz(String nombreArchivoPNG, String nombreArchivoDot) {
+        ProcessBuilder process = new ProcessBuilder("dot", "-Tpng", "-o", nombreArchivoPNG, nombreArchivoDot);
         process.redirectErrorStream(true);
         try {
             process.start();
@@ -57,7 +57,6 @@ public class GraphViz {
                 + "\n"
                 + "}";
 
-        System.out.println(codigo);
         
         return codigo;
     }

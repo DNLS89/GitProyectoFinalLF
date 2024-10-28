@@ -97,8 +97,8 @@ public class Pantalla extends javax.swing.JFrame {
             contenido5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contenido5Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47))
             .addGroup(contenido5Layout.createSequentialGroup()
@@ -180,6 +180,7 @@ public class Pantalla extends javax.swing.JFrame {
     private void btnReporteSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteSintacticoActionPerformed
         // TODO add your handling code here:
         //reportes.reporte("Sintacticos", ERRORESSINTACTICOS, 5);
+        reportes.reporte("ERRORESSintactico", gestorTexto.getAnalizadorDDL().getErroresSintacticos(), 5);
     }//GEN-LAST:event_btnReporteSintacticoActionPerformed
 
     private void btnOtrosReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtrosReportesActionPerformed

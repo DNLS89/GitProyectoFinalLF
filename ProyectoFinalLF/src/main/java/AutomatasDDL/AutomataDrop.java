@@ -1,12 +1,15 @@
 package AutomatasDDL;
 
 import LOGICA.Token;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AutomataDrop {
     private char estado = 'A';
     
     private List<List<String>> comandosAceptadosModificacion;
+    private List<String> comandoEnAceptacion = new ArrayList<>();
+    private List<String> datosTabla;
 
     public AutomataDrop(List<List<String>> comandosAceptadosModificacion) {
         this.comandosAceptadosModificacion = comandosAceptadosModificacion;
@@ -63,6 +66,8 @@ public class AutomataDrop {
                     switch (token.getTipo()) {
                         case "IDENTIFICADOR":
                             estado = 'G';
+                            comandoEnAceptacion.add("DROP TABLE " + token.getNombre());
+                            comandoEnAceptacion.add("DROP " + token.getNombre());
                             break;
                         default:
                             estado = 'E';
@@ -72,6 +77,7 @@ public class AutomataDrop {
                     switch (token.getNombre()) {
                         case "CASCADE":
                             estado = 'H';
+                            comandoEnAceptacion.add(token.getNombre());
                             break;
                         default:
                             estado = 'E';
@@ -99,6 +105,7 @@ public class AutomataDrop {
 
         if (estado == 'I') {
             System.out.println("Cumpre con formato Drop");
+            comandosAceptadosModificacion.add(comandoEnAceptacion);
             return true;
         } else {
             System.out.println("No cumple con formato Drop");

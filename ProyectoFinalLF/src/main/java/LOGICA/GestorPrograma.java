@@ -1,19 +1,13 @@
 package LOGICA;
 
-import GUI.Pantalla;
-import com.yeferal.main.AnalizadorLexico;
+import LOGICA.AnalizadorLexico;
 import java.awt.Color;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
@@ -62,7 +56,7 @@ public class GestorPrograma {
     public List<Token> getErroresLexico() {
         return erroresLexico;
     }
-
+    
     public void procesar(String textoOriginal, JTextPane panelTexto, JTextPane txtColores, JButton btnOtrosReportes,
             JButton btnReporteSintactico, JButton btnGenerarGrafico) {
         this.textoOriginal = textoOriginal;
@@ -99,14 +93,26 @@ public class GestorPrograma {
             }
             
             GraphViz graph = new GraphViz(analizadorDDL.getComandosAceptadosCreate());
-            graph.generar("DiagramaCreate.dot");
+            graph.generar("DiagramaCreacion.png", "DiagramaCreate.dot");
         }
         
         //Generar Grafico Modificadores
         if (!analizadorDDL.getComandosAceptadosModificacion().isEmpty()) {
-            analizadorDDL.getComandosAceptadosCreate();
-            GraphViz graph = new GraphViz(analizadorDDL.getComandosAceptadosCreate());
-            graph.generar("DiagramaModificacion.dot");
+            analizadorDDL.getComandosAceptadosModificacion();
+            
+            for (List<String> comando : analizadorDDL.getComandosAceptadosModificacion()) {
+                
+                for (String elemento : comando) {
+                    System.out.println(elemento);
+                }
+                
+                
+            }
+            
+            
+            
+            GraphViz graph = new GraphViz(analizadorDDL.getComandosAceptadosModificacion());
+            graph.generar("DiagramaModificacion.png", "DiagramaModificacion.dot");
         }
         
 

@@ -1,4 +1,4 @@
-package com.yeferal.main;
+package LOGICA;
 
 //Seccion de imports
 import java.util.ArrayList;

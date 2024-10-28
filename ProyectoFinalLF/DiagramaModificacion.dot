@@ -1,0 +1,31 @@
+digraph {
+  graph [pad="0.5", nodesep="0.5", ranksep="2" ]  //  splines=ortho]
+  node  [shape=plain]
+ // rankdir=LR;  // makes a very small difference
+
+Foo [label=<
+<table border="0" cellborder="1" cellspacing="0">
+  <tr>  <td> DROP TABLE empleados</td></tr>
+  <tr>  <td> DROP empleados</td></tr>
+  <tr>  <td> CASCADE</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> ALTER TABLE empleados </td></tr>
+  <tr>  <td> ALTER COLUMN </td></tr>
+  <tr>  <td> salario: NUMERIC ( 12 , 2 ) </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> DROP TABLE empleados</td></tr>
+  <tr>  <td> DROP empleados</td></tr>
+  <tr>  <td> CASCADE</td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> ALTER TABLE empleados </td></tr>
+  <tr>  <td> ALTER COLUMN </td></tr>
+  <tr>  <td> salario: NUMERIC ( 12 , 2 ) </td></tr>
+  <tr>  <td> </td></tr>
+  <tr>  <td> </td></tr>
+</table>>];
+
+
+}

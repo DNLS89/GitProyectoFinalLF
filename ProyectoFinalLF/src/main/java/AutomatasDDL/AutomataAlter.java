@@ -9,23 +9,20 @@ public class AutomataAlter {
     //private List<Token> tokens;
     private String estado = "1";
     private char estadoTipoDeDatos = 'A';
-    
+
     private List<List<String>> comandosAceptadosModificacion;
     private List<String> comandoEnAceptacion = new ArrayList<>();
     private List<String> datosTabla;
-    
 
     public AutomataAlter(List<List<String>> comandosAceptadosModificacion) {
         //this.tokens = tokens;
-        
+
         this.comandosAceptadosModificacion = comandosAceptadosModificacion;
     }
-    
-    
-
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
 
+        datosTabla = new ArrayList<>();
         for (int indiceToken = 0; indiceToken < comandoIndividual.size(); indiceToken++) {
             Token token = comandoIndividual.get(indiceToken);
             //System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo() + " estado " + estado);
@@ -33,61 +30,96 @@ public class AutomataAlter {
             switch (estado) {
                 case "1" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
-                    estado = switch (token.getNombre()) {
-                        case "ALTER" ->
-                            "2";
+                    switch (token.getNombre()) {
+                        case "ALTER" -> {
+                            estado = "2";
+                            datosTabla.add(token.getNombre() + " ");
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
 
                 case "2" -> {
-                    estado = switch (token.getNombre()) {
-                        case "TABLE" ->
-                            "3";
+                    switch (token.getNombre()) {
+                        case "TABLE" -> {
+                            estado = "3";
+                            datosTabla.add(token.getNombre() + " ");
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
 
                 case "3" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "4";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            datosTabla.add(token.getNombre() + " ");
+
+                            String stringDatosTabla = "";
+                            for (String palabra : datosTabla) {
+                                stringDatosTabla += palabra;
+
+                            }
+                            comandoEnAceptacion.add(stringDatosTabla);
+                            datosTabla = new ArrayList<>();
+                            
+                            
+                            estado = "4";
+                        }
+
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
+                    break;
                 }
                 case "4" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
-                    estado = switch (token.getNombre()) {
-                        case "DROP" ->
-                            "5";
-                        case "ADD" ->
-                            "9";
-                        case "ALTER" ->
-                            "25";
+                    switch (token.getNombre()) {
+                        case "DROP" -> {
+                            estado = "5";
+                            datosTabla.add(token.getNombre() + " ");
+                        }
+                        case "ADD" -> {
+                            estado = "9";
+                            datosTabla.add(token.getNombre() + " ");
+                        }
+                        case "ALTER" -> {
+                            estado = "25";
+                            datosTabla.add(token.getNombre() + " ");
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
+                    break;
                 }
 
                 case "5" -> {
-                    estado = switch (token.getNombre()) {
-                        case "COLUMN" ->
-                            "6";
+                    switch (token.getNombre()) {
+                        case "COLUMN" -> {
+                            estado = "6";
+                            datosTabla.add(token.getNombre() + " ");
+                            String stringDatosTabla = "";
+                            for (String palabra : datosTabla) {
+                                stringDatosTabla += palabra;
+
+                            }
+                            comandoEnAceptacion.add(stringDatosTabla);
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
 
                 case "6" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "7";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            estado = "7";
+                            comandoEnAceptacion.add(token.getNombre());
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
                 case "7" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
@@ -100,23 +132,43 @@ public class AutomataAlter {
                 }
 
                 case "9" -> {
-                    estado = switch (token.getNombre()) {
-                        case "COLUMN" ->
-                            "10";
-                        case "CONSTRAINT" ->
-                            "13";
+                    switch (token.getNombre()) {
+                        case "COLUMN" -> {
+                            estado = "10";
+                            datosTabla.add(token.getNombre() + " ");
+                            String stringDatosTabla = "";
+                            for (String palabra : datosTabla) {
+                                stringDatosTabla += palabra;
+
+                            }
+                            comandoEnAceptacion.add(stringDatosTabla);
+                            datosTabla = new ArrayList<>();
+                        }
+                        case "CONSTRAINT" -> {
+                            estado = "13";
+                            datosTabla.add(token.getNombre() + " ");
+                            String stringDatosTabla = "";
+                            for (String palabra : datosTabla) {
+                                stringDatosTabla += palabra;
+
+                            }
+                            comandoEnAceptacion.add(stringDatosTabla);
+                            datosTabla = new ArrayList<>();
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
 
                 case "10" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "11";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            estado = "11";
+                            datosTabla.add(token.getNombre() + ": ");
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
 
                 case "11" ->
@@ -132,12 +184,14 @@ public class AutomataAlter {
                 }
 
                 case "13" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "14";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            estado = "14";
+                            datosTabla.add(token.getNombre() + ": ");
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
                 case "14" -> {
 
@@ -304,20 +358,31 @@ public class AutomataAlter {
                     };
                 }
                 case "25" -> {
-                    estado = switch (token.getNombre()) {
-                        case "COLUMN" ->
-                            "26";
+                    switch (token.getNombre()) {
+                        case "COLUMN" -> {
+                            estado = "26";
+                            datosTabla.add(token.getNombre() + " ");
+                            String stringDatosTabla = "";
+                            for (String palabra : datosTabla) {
+                                stringDatosTabla += palabra;
+
+                            }
+                            comandoEnAceptacion.add(stringDatosTabla);
+                            datosTabla = new ArrayList<>();
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
                 case "26" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "27";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            estado = "27";
+                            datosTabla.add(token.getNombre() + ": ");
+                        }
                         default ->
-                            "E";
-                    };
+                            estado = "E";
+                    }
                 }
                 case "27" -> {
                     estado = switch (token.getNombre()) {
@@ -332,7 +397,7 @@ public class AutomataAlter {
                     comprobarEsTipoDato(token);
 
                 case "E" -> {
-                   // System.out.println("Token en el que detectó error ALTER: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
+                    // System.out.println("Token en el que detectó error ALTER: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
                     return false;
                     //break;
                 }
@@ -343,6 +408,7 @@ public class AutomataAlter {
 
         if (estado.equals("8") || estado.equals("32")) {
             System.out.println("Cumpre con formato Alter");
+            comandosAceptadosModificacion.add(comandoEnAceptacion);
             return true;
         } else {
             System.out.println("No cumple con formato Alter");
@@ -356,18 +422,20 @@ public class AutomataAlter {
         switch (estadoTipoDeDatos) {
             case 'A':
                 //Abajo entra a la letra y en base a eso cambia de estado
-
                 if (tokenIndividual.getNombre().equals("SERIAL") || tokenIndividual.getNombre().equals("INTEGER")
                         || tokenIndividual.getNombre().equals("BIGINT") || tokenIndividual.getNombre().equals("DATE")
                         || tokenIndividual.getNombre().equals("TEXT") || tokenIndividual.getNombre().equals("BOOLEAN")) {
                     estado = "12";
                     estadoTipoDeDatos = 'A';
+                    datosTabla.add(tokenIndividual.getNombre() + " ");
 
                 } else if (tokenIndividual.getNombre().equals("VARCHAR")) {
                     estadoTipoDeDatos = 'B';
+                    datosTabla.add(tokenIndividual.getNombre() + " ");
                     //System.out.println("ESTADO B");
-                } else if (tokenIndividual.getNombre().equals("DECIMAL")  || tokenIndividual.getNombre().equals("NUMERIC")) {
+                } else if (tokenIndividual.getNombre().equals("DECIMAL") || tokenIndividual.getNombre().equals("NUMERIC")) {
                     estadoTipoDeDatos = 'G';
+                    datosTabla.add(tokenIndividual.getNombre() + " ");
                 } else {
                     estado = "E";
                 }
@@ -378,6 +446,7 @@ public class AutomataAlter {
                 switch (tokenIndividual.getNombre()) {
                     case "(":
                         estadoTipoDeDatos = 'C';
+                        datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
                         estado = "E";
@@ -387,6 +456,7 @@ public class AutomataAlter {
                 switch (tokenIndividual.getTipo()) {
                     case "ENTERO":
                         estadoTipoDeDatos = 'D';
+                        datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
                         estado = "E";
@@ -399,6 +469,14 @@ public class AutomataAlter {
 
                         estado = "12";
 
+                        datosTabla.add(tokenIndividual.getNombre() + " ");
+                        String stringDatosTabla = "";
+                        for (String palabra : datosTabla) {
+                            stringDatosTabla += palabra;
+
+                        }
+                        comandoEnAceptacion.add(stringDatosTabla);
+
                         break;
                     default:
                         estado = "E";
@@ -408,6 +486,7 @@ public class AutomataAlter {
                 switch (tokenIndividual.getNombre()) {
                     case "(":
                         estadoTipoDeDatos = 'H';
+                        datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
                         estado = "E";
@@ -417,6 +496,7 @@ public class AutomataAlter {
                 switch (tokenIndividual.getTipo()) {
                     case "ENTERO":
                         estadoTipoDeDatos = 'I';
+                        datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
                         estado = "E";
@@ -426,6 +506,7 @@ public class AutomataAlter {
                 switch (tokenIndividual.getNombre()) {
                     case ",":
                         estadoTipoDeDatos = 'J';
+                        datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
                         estado = "E";
@@ -435,6 +516,7 @@ public class AutomataAlter {
                 switch (tokenIndividual.getTipo()) {
                     case "ENTERO":
                         estadoTipoDeDatos = 'K';
+                        datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
                         estado = "E";
@@ -446,6 +528,15 @@ public class AutomataAlter {
                         estadoTipoDeDatos = 'A';
 
                         estado = "12";
+
+                        datosTabla.add(tokenIndividual.getNombre() + " ");
+
+                        String stringDatosTabla = "";
+                        for (String palabra : datosTabla) {
+                            stringDatosTabla += palabra;
+
+                        }
+                        comandoEnAceptacion.add(stringDatosTabla);
 
                         break;
                     default:

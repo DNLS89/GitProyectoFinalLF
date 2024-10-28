@@ -1,11 +1,13 @@
 package LOGICA;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -177,19 +179,20 @@ public class Reportes {
             tableModel.setRowCount(0);
 
             for (Token tokenIndividual : tokens) {
-                String token = tokenIndividual.getNombre();
+                String nombreToken = tokenIndividual.getNombre();
+                String tipoToken = tokenIndividual.getTipo();
                 //String tipo = tokenIndividual.getTipo();
                 int fila = tokenIndividual.getFila();
                 int columna = tokenIndividual.getColumna();
+                String descripcionError = tokenIndividual.getDescripcionTokenError();
 
-                tableModel.addRow(new Object[]{token, fila, columna});
+                tableModel.addRow(new Object[]{nombreToken, tipoToken, fila, columna, descripcionError});
             }
         }
 
     }
 
     public void mostrarTabla() {
-
         JOptionPane.showMessageDialog(null, new JScrollPane(tabla));
     }
 }

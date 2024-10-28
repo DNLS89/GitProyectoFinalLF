@@ -23,6 +23,8 @@ public class AnalizadorDDLyDML {
     private List<List<String>> comandosAceptadosCreate = new ArrayList<>();
     private List<List<String>> comandosAceptadosModificacion = new ArrayList<>();
     
+    private List<Token> erroresSintacticos = new ArrayList<>();
+    
     // private List<List<Token>> comandosNoAceptados = new ArrayList<>();
 
     public AnalizadorDDLyDML(List<Token> tokens, String[] lineasOriginal, JButton btnOtrosReportes,
@@ -47,8 +49,10 @@ public class AnalizadorDDLyDML {
     public List<List<String>> getComandosAceptadosModificacion() {
         return comandosAceptadosModificacion;
     }
-    
-    
+
+    public List<Token> getErroresSintacticos() {
+        return erroresSintacticos;
+    }
     
     public void procesar() {
         extraerElementosDDL();
@@ -81,9 +85,13 @@ public class AnalizadorDDLyDML {
                 guardarElementos = true;
 
                 btnOtrosReportes.setVisible(true);
-                btnReporteSintactico.setVisible(true);
+                
 
                 //Muestra botones reportes
+            } else {
+                token.setDescripcionTokenError("Se esperaba CREATE | ALTER | DROP | INSERT | SELECT");
+                btnReporteSintactico.setVisible(true);
+                erroresSintacticos.add(token);
             }
 
             if (guardarElementos) {
