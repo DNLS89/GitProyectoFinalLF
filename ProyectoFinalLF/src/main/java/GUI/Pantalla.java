@@ -1,6 +1,7 @@
 package GUI;
 
 import LOGICA.GestorPrograma;
+import LOGICA.LectorArchivo;
 import LOGICA.Reportes;
 import java.awt.Color;
 import java.awt.Font;
@@ -14,15 +15,17 @@ import javax.swing.text.StyledDocument;
 
 public class Pantalla extends javax.swing.JFrame {
 
-    GestorPrograma gestorTexto = new GestorPrograma();
+    GestorPrograma gestorTexto;
     Reportes reportes = new Reportes();
 
     public Pantalla() {
         initComponents();
         btnOtrosReportes.setVisible(false);
-        btnReporteLexico.setVisible(false);
-        btnReporteSintactico.setVisible(false);
+        //btnReporteLexico.setVisible(false);
+        //btnReporteSintactico.setVisible(false);
         btnGenerarGrafico.setVisible(false);
+
+        gestorTexto = new GestorPrograma(txtPanel, jTextPane1, btnOtrosReportes, btnReporteSintactico, btnGenerarGrafico);
     }
 
     /**
@@ -63,6 +66,11 @@ public class Pantalla extends javax.swing.JFrame {
         });
 
         jButton1.setText("Archivo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         btnGenerarGrafico.setText("Generar Gráfico");
         btnGenerarGrafico.addActionListener(new java.awt.event.ActionListener() {
@@ -71,7 +79,7 @@ public class Pantalla extends javax.swing.JFrame {
             }
         });
 
-        btnReporteSintactico.setText("Errores Sintáctico");
+        btnReporteSintactico.setText("Errores Sintácticos");
         btnReporteSintactico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReporteSintacticoActionPerformed(evt);
@@ -161,10 +169,10 @@ public class Pantalla extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         if (!txtPanel.getText().isBlank()) {
-            
+
             btnReporteLexico.setVisible(true);
-            gestorTexto.procesar(txtPanel.getText(), txtPanel, jTextPane1, btnOtrosReportes, btnReporteSintactico, btnGenerarGrafico);
-            
+            gestorTexto.procesar(txtPanel.getText()/*, txtPanel, jTextPane1, btnOtrosReportes, btnReporteSintactico, btnGenerarGrafico*/);
+
         } else {
             JOptionPane.showMessageDialog(null, "No hay elementos ingresados", "ERROR", JOptionPane.PLAIN_MESSAGE);
         }
@@ -172,6 +180,7 @@ public class Pantalla extends javax.swing.JFrame {
 
     private void btnReporteLexicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteLexicoActionPerformed
         // TODO add your handling code here:
+        reportes = new Reportes();
         reportes.reporte("ERRORESTokens", gestorTexto.getErroresLexico(), 4);
         //gestorTexto.reporteTokens();
 
@@ -180,20 +189,32 @@ public class Pantalla extends javax.swing.JFrame {
     private void btnReporteSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteSintacticoActionPerformed
         // TODO add your handling code here:
         //reportes.reporte("Sintacticos", ERRORESSINTACTICOS, 5);
-        reportes.reporte("ERRORESSintactico", gestorTexto.getAnalizadorDDL().getErroresSintacticos(), 5);
+        reportes = new Reportes();
+        if ((gestorTexto.getAnalizadorDDL() == null)) {
+            reportes.mostrarTabla();
+        } else {
+            reportes.reporte("ERRORESSintactico", gestorTexto.getAnalizadorDDL().getErroresSintacticos(), 5);
+        }
     }//GEN-LAST:event_btnReporteSintacticoActionPerformed
 
     private void btnOtrosReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtrosReportesActionPerformed
         // TODO add your handling code here:
+        reportes = new Reportes();
         reportes.setTodosLosComandos(gestorTexto.getAnalizadorDDL().getTodosLosComandos());
         reportes.obtenerOtrosReportes();
-        
+
     }//GEN-LAST:event_btnOtrosReportesActionPerformed
 
     private void btnGenerarGraficoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarGraficoActionPerformed
         // TODO add your handling code here:
         gestorTexto.generarGrafico();
     }//GEN-LAST:event_btnGenerarGraficoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        LectorArchivo lector = new LectorArchivo(gestorTexto);
+        lector.abrirArchivo();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

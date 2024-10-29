@@ -10,11 +10,13 @@ public class AutomataInsert {
     private char estadoTipoDeDatos = 'A';
     private List<List<Token>> todosLosComandos;
     int indiceGENERAL;
+    private List<Token> erroresSintacticos;
 
-    public AutomataInsert(List<List<Token>> todosLosComandos, int indiceGENERAL) {
+    public AutomataInsert(List<List<Token>> todosLosComandos, int indiceGENERAL, List<Token> erroresSintacticos) {
         //this.tokens = tokens;
         this.todosLosComandos = todosLosComandos;
         this.indiceGENERAL = indiceGENERAL;
+        this.erroresSintacticos = erroresSintacticos;
     }
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
@@ -26,100 +28,143 @@ public class AutomataInsert {
             switch (estado) {
                 case "1" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
-                    estado = switch (token.getNombre()) {
-                        case "INSERT" ->
-                            "2";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "INSERT" -> {
+                            estado = "2";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba \"INSERT\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "2" -> {
-                    estado = switch (token.getNombre()) {
-                        case "INTO" ->
-                            "3";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "INTO" -> {
+                            estado = "3";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba \"INTO\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "3" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "4";
-                        default ->
-                            "E";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            estado = "4";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba un Ident.");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "4" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
-                    estado = switch (token.getNombre()) {
-                        case "(" ->
-                            "5";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "(" -> {
+                            estado = "5";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba \"(\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "5" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "6";
-                        default ->
-                            "E";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            estado = "6";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba un Ident.");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "6" -> {
-                    estado = switch (token.getNombre()) {
-                        case ")" ->
-                            "7";
-                        case "," ->
-                            "5";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case ")" -> {
+                            estado = "7";
+                        }
+                        case "," -> {
+                            estado = "5";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba \") | ,\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "7" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
-                    estado = switch (token.getNombre()) {
-                        case "VALUES" ->
-                            "8";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "VALUES" -> {
+                            estado = "8";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba \"VALUES\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "8" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
-                    estado = switch (token.getNombre()) {
-                        case "(" ->
-                            "9";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "(" -> {
+                            estado = "9";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba \"(\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "9" ->
                     comprobarEsEstructuraDato(token, indiceToken);
 
                 case "10" -> {
-                    estado = switch (token.getNombre()) {
-                        case "," ->
-                            "9";
-                        case ")" ->
-                            "11";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "," -> {
+                            estado = "9";
+                        }
+                        case ")" -> {
+                            estado = "11";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba \", | )\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "11" -> {
-                    estado = switch (token.getNombre()) {
-                        case ";" ->
-                            "12";
-                        case "," ->
-                            "8";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case ";" -> {
+                            estado = "12";
+                        }
+                        case "," -> {
+                            estado = "8";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba \"; | ,\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "E" -> {
                     //System.out.println("Token en el que detectó error DML INSERT: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
-                    return false;
+                    //return false;
                     //break;
                 }
                 //break;
@@ -138,7 +183,7 @@ public class AutomataInsert {
     }
 
     private void comprobarEsEstructuraDato(Token tokenIndividual, int indice) {
-       // System.out.println("Comprobando estructura de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+        // System.out.println("Comprobando estructura de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
         switch (estadoTipoDeDatos) {
             case 'A':
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -158,20 +203,24 @@ public class AutomataInsert {
                 } else if (tokenIndividual.getNombre().equals("(")) {
                     estadoTipoDeDatos = 'C';
                 } else if (tokenIndividual.getTipo().equals("FECHA")) {
-                    
+
                     if (!(todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
                         estadoTipoDeDatos = 'A';
                         estado = "10";
                     } else {
                         estadoTipoDeDatos = 'F';
                     }
-                    
+
                 } else if (tokenIndividual.getNombre().equals("TRUE") || tokenIndividual.getNombre().equals("FALSE")
-                         || tokenIndividual.getTipo().equals("CADENA")) {
+                        || tokenIndividual.getTipo().equals("CADENA")) {
                     estadoTipoDeDatos = 'A';
                     estado = "10";
                 } else {
+
+                    tokenIndividual.setDescripcionTokenError("Se esperaba una Estruc. de Dato");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = "E";
+
                 }
 
                 break;
@@ -184,14 +233,18 @@ public class AutomataInsert {
                         || tokenIndividual.getNombre().equals(">")) {
                     estadoTipoDeDatos = 'A';
                 } else {
+                    tokenIndividual.setDescripcionTokenError("Se esperaba una Estruc. de Dato");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = "E";
                 }
                 break;
-                
+
             case 'C':
                 if (tokenIndividual.getTipo().equals("ENTERO") || tokenIndividual.getTipo().equals("DECIMAL")) {
                     estadoTipoDeDatos = 'D';
                 } else {
+                    tokenIndividual.setDescripcionTokenError("Se esperaba un ENTERO o DECIMAL");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = "E";
                 }
                 break;
@@ -202,9 +255,7 @@ public class AutomataInsert {
                         || tokenIndividual.getNombre().equals(">")) {
                     estadoTipoDeDatos = 'C';
                 } else if (tokenIndividual.getNombre().equals(")")) {
-                    
-                    
-                    
+
                     if (!(todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("+") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("*")
                             || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("-") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("/")
                             || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("OR") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<")
@@ -214,26 +265,27 @@ public class AutomataInsert {
                     } else {
                         estadoTipoDeDatos = 'B';
                     }
-                    
-                    
-                    
-                    
+
                 } else {
+                    tokenIndividual.setDescripcionTokenError("Se esperaba una Estruc. de Dato");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = "E";
                 }
                 break;
-                
+
             case 'F':
                 if (tokenIndividual.getNombre().equals("<") || tokenIndividual.getNombre().equals(">")) {
                     estadoTipoDeDatos = 'G';
                 } else {
+                    tokenIndividual.setDescripcionTokenError("Se esperaba < o >");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = "E";
                 }
                 break;
             case 'G':
                 switch (tokenIndividual.getTipo()) {
                     case "FECHA":
-                        
+
                         if (!(todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("+") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("*")
                                 || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("-") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("/")
                                 || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("OR") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<")
@@ -245,10 +297,12 @@ public class AutomataInsert {
                         }
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba una Estruc. de Dato");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = "E";
                 }
                 break;
-            
+
         }
 
         if (estado.equals("E")) {

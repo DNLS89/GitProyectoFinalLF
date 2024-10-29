@@ -19,14 +19,16 @@ public class AutomataUpdate {
     private boolean esPrevioAWhere = true;
     private boolean dentroDeWhere = false;
     private boolean estaEnPuntosCorrectosDeWhere = false;
+    private List<Token> erroresSintacticos;
 
     private List<List<Token>> todosLosComandos;
     int indiceGENERAL;
 
-    public AutomataUpdate(List<List<Token>> todosLosComandos, int indiceGENERAL) {
+    public AutomataUpdate(List<List<Token>> todosLosComandos, int indiceGENERAL, List<Token> erroresSintacticos) {
         //this.tokens = tokens;
         this.todosLosComandos = todosLosComandos;
         this.indiceGENERAL = indiceGENERAL;
+        this.erroresSintacticos = erroresSintacticos;
     }
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
@@ -110,7 +112,7 @@ public class AutomataUpdate {
                 }
                 case "E" -> {
 //                    System.out.println("Token en el que detectó error DML SELECT: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
-                    return false;
+                    //return false;
                 }
 
             }
@@ -195,6 +197,8 @@ public class AutomataUpdate {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de WHERE");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en ORDER: " + tokenIndividual);
 //            System.out.println("");
@@ -322,6 +326,8 @@ public class AutomataUpdate {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de Estructura de Dato");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en estructura de datos: " + tokenIndividual);
 //            System.out.println("");

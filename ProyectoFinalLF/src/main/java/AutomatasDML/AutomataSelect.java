@@ -24,21 +24,21 @@ public class AutomataSelect {
     private boolean comprobarEsGroup = false;
     private boolean comprobarEsOrder = false;
     private boolean comprobarEsLimit = false;
-    
-    
-    
+
     private boolean funcionAgregacion2 = false;
 
     private boolean terminaEnRamaSuperior = false;
     private boolean estaEnPuntosCorrectosDeWhere = false;
+    private List<Token> erroresSintacticos;
 
     private List<List<Token>> todosLosComandos;
     int indiceGENERAL;
 
-    public AutomataSelect(List<List<Token>> todosLosComandos, int indiceGENERAL) {
+    public AutomataSelect(List<List<Token>> todosLosComandos, int indiceGENERAL, List<Token> erroresSintacticos) {
         //this.tokens = tokens;
         this.todosLosComandos = todosLosComandos;
         this.indiceGENERAL = indiceGENERAL;
+        this.erroresSintacticos = erroresSintacticos;
     }
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
@@ -73,6 +73,8 @@ public class AutomataSelect {
                             estadoFinalSentencia = "5";
                             estado = "7";
                         } else {
+                            token.setDescripcionTokenError("Se esperaba un SUM | COUNT | ABG | MIN | MAX | Ident. | *");
+                            erroresSintacticos.add(token);
                             estado = "E";
                         }
                     }
@@ -86,19 +88,27 @@ public class AutomataSelect {
                 }
                 case "7" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
-                    estado = switch (token.getNombre()) {
-                        case "FROM" ->
-                            "3";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "FROM" -> {
+                            estado = "3";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba un FROM");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "3" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "4";
-                        default ->
-                            "E";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            estado = "4";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba un un Ident.");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
 
@@ -119,16 +129,23 @@ public class AutomataSelect {
                         case "LIMIT" -> {
                             estado = "39";
                         }
-                        default ->
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba un ; | LIMIT");
+                            erroresSintacticos.add(token);
                             estado = "E";
+                        }
                     }
                 }
                 case "9" -> {
-                    estado = switch (token.getNombre()) {
-                        case "FROM" ->
-                            "10";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "FROM" -> {
+                            estado = "10";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba un FROM");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "10" -> {
@@ -148,19 +165,20 @@ public class AutomataSelect {
                         }
 
                     } else {
+                        token.setDescripcionTokenError("Se esperaba un Ident.");
+                        erroresSintacticos.add(token);
                         estado = "E";
                     }
                 }
                 case "11" -> {
-                    if (token.getNombre().equals(";") && !estado.equals("E") && estaEnPuntosCorrectosDeWhere ) {
+                    if (token.getNombre().equals(";") && !estado.equals("E") && estaEnPuntosCorrectosDeWhere) {
                         estado = "6";
                     } else if (token.getNombre().equals(";") && todosLosComandos.get(indiceGENERAL).get(indiceToken - 2).getNombre().equals("FROM")) {
                         estado = "6";
                     } else if (token.getNombre().equals("LIMIT") && estaEnPuntosCorrectosDeWhere) {
                         estadoSentencia = "39";
                         sentencia(token, indiceToken);
-                    }
-                        else {
+                    } else {
                         sentencia(token, indiceToken);
                     }
                 }
@@ -170,6 +188,8 @@ public class AutomataSelect {
                     } else if (token.getNombre().equals("LIMIT")) {
                         estado = "39";
                     } else {
+                        token.setDescripcionTokenError("Se esperaba un ; | LIMIT");
+                        erroresSintacticos.add(token);
                         estado = "E";
                         //sentencia(token, indiceToken);
                     }
@@ -183,7 +203,7 @@ public class AutomataSelect {
                 }
                 case "E" -> {
 //                    System.out.println("Token en el que detectó error DML SELECT: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
-                    return false;
+                    //return false;
                     //break;
                 }
                 //break;
@@ -258,6 +278,8 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de Seleccion de Columna");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en seleccioncolumna: " + tokenIndividual);
 //            System.out.println("");
@@ -305,7 +327,7 @@ public class AutomataSelect {
                         estadoSeleccionColumna = "13";
                         funcionAgregacion2 = false;
                     }
-                    
+
                     estadoFuncionAgregacion = "2";
                     comprobarFuncionAgregacion = false;
                 } else {
@@ -315,6 +337,8 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de Funcion Agrega.");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en funcion agregacion: " + tokenIndividual);
 //            System.out.println("");
@@ -417,6 +441,8 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento JOIN");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en JOIN: " + tokenIndividual);
 //            System.out.println("");
@@ -458,7 +484,7 @@ public class AutomataSelect {
             } else {
                 estado = "E";
             }
-            
+
         } else if (estadoSentencia.equals("33")) {
 //            System.out.println("PRUEBA ESTADO 33 token:" + tokenIndividual.getNombre());
             if (tokenIndividual.getNombre().equals("AND")) {
@@ -491,8 +517,10 @@ public class AutomataSelect {
                 estado = "E";
             }
         }
-        
+
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de WHERE");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en ORDER: " + tokenIndividual);
 //            System.out.println("");
@@ -548,6 +576,8 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de GROUP");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en GROUP: " + tokenIndividual);
 //            System.out.println("");
@@ -588,6 +618,8 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de ORDER");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en ORDER: " + tokenIndividual);
 //            System.out.println("");
@@ -614,6 +646,8 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de LIMIT");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en LIMIT: " + tokenIndividual);
 //            System.out.println("");
@@ -719,6 +753,8 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
+            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de Estructura de Dato");
+            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en estructura de datos: " + tokenIndividual);
 //            System.out.println("");

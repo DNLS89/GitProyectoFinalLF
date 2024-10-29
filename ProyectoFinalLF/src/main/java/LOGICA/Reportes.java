@@ -98,7 +98,14 @@ public class Reportes {
 
     public void reporte(String tipoReporte, List<Token> tokens, int longitud) {
 
-        añadirDatosTabla(tipoReporte, tokens, longitud);
+        if (!(tokens == null)) {
+            if (!tokens.isEmpty()) {
+                añadirDatosTabla(tipoReporte, tokens, longitud);
+            }
+            
+        }
+//        añadirDatosTabla(tipoReporte, tokens, longitud);
+        
         mostrarTabla();
 
     }

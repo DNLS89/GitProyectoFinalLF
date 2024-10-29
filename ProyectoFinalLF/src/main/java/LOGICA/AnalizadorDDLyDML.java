@@ -71,6 +71,10 @@ public class AnalizadorDDLyDML {
             }
             indice++;
         }
+        
+        if (!erroresSintacticos.isEmpty()){ 
+            btnReporteSintactico.setVisible(true);
+        }
 
     }
 
@@ -131,13 +135,13 @@ public class AnalizadorDDLyDML {
 
         //AutomataCreate automataCreate = new AutomataCreate(tokens, comandosAceptadosCreate);
         AutomataCreate automataCreate = new AutomataCreate(todosLosComandos, indice, comandosAceptadosCreate, erroresSintacticos);
-        AutomataDrop automataDrop = new AutomataDrop(comandosAceptadosModificacion);
+        AutomataDrop automataDrop = new AutomataDrop(comandosAceptadosModificacion, erroresSintacticos);
         //AutomataAlter automataAlter = new AutomataAlter(tokens, comandosAceptadosModificacion);
-        AutomataAlter automataAlter = new AutomataAlter(comandosAceptadosModificacion);
-        AutomataInsert automataInsert = new AutomataInsert(todosLosComandos, indice);
-        AutomataSelect automataSelect = new AutomataSelect(todosLosComandos, indice);
-        AutomataUpdate automataUpdate = new AutomataUpdate(todosLosComandos, indice);
-        AutomataDelete automataDelete = new AutomataDelete(todosLosComandos, indice);
+        AutomataAlter automataAlter = new AutomataAlter(comandosAceptadosModificacion, erroresSintacticos);
+        AutomataInsert automataInsert = new AutomataInsert(todosLosComandos, indice, erroresSintacticos);
+        AutomataSelect automataSelect = new AutomataSelect(todosLosComandos, indice, erroresSintacticos);
+        AutomataUpdate automataUpdate = new AutomataUpdate(todosLosComandos, indice, erroresSintacticos);
+        AutomataDelete automataDelete = new AutomataDelete(todosLosComandos, indice, erroresSintacticos);
 
         if (comandoIndividual.get(0).getNombre().equals("CREATE")) {
 

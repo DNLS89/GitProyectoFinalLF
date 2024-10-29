@@ -23,9 +23,9 @@ public class AutomataCreate {
     private List<List<String>> comandosAceptadosCreate;
     private List<String> comandoEnAceptacion = new ArrayList<>();
     private List<String> datosTabla;
-    
+
     private List<Token> erroresSintacticos;
-    
+
     private List<List<Token>> todosLosComandos;
     int indiceGENERAL;
 
@@ -42,9 +42,9 @@ public class AutomataCreate {
 
             Token token = comandoIndividual.get(indiceToken);
             //System.out.println("");
-            //System.out.println("ESTADOS: normal " + estado + " declaracion " + estadoDeclaracion
-            //        + " datos " + estadoTipoDeDatos + " estructu " + estadoEstructuraLlave);
-            //System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo());
+//            System.out.println("ESTADOS: normal " + estado + " declaracion " + estadoDeclaracion
+//                    + " datos " + estadoTipoDeDatos + " estructu " + estadoEstructuraLlave);
+//            System.out.println("Evaluando token " + token.getNombre() + " tipo: " + token.getTipo());
 
             switch (estado) {
                 case 'A':
@@ -54,6 +54,8 @@ public class AutomataCreate {
                             estado = 'B';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba la \"CREATE\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -67,6 +69,8 @@ public class AutomataCreate {
                             estado = 'F';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba la \"TABLE | DATABASE\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -77,6 +81,8 @@ public class AutomataCreate {
                             estado = 'L';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba un Ident.");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -86,6 +92,8 @@ public class AutomataCreate {
                             estado = 'D';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \";\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -96,6 +104,8 @@ public class AutomataCreate {
                             estado = 'G';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba un Ident.");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -105,6 +115,8 @@ public class AutomataCreate {
                             estado = 'H';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \"(\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -124,6 +136,8 @@ public class AutomataCreate {
                             estado = 'L';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \", | )\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -145,6 +159,8 @@ public class AutomataCreate {
                     } else if (token.getNombre().equals(")")) {
                         estado = 'L';
                     } else {
+                        token.setDescripcionTokenError("Se esperaba \"Ident. | CONSTRAINT | )\"");
+                        erroresSintacticos.add(token);
                         estado = 'E';
                     }
 
@@ -155,12 +171,14 @@ public class AutomataCreate {
                             estado = 'L';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \")\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
                 case 'E':
                     //System.out.println("Token en el que detectó error CREATE: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
-                    return false;
+                    //return false;
                 //break;
 
             }
@@ -191,6 +209,8 @@ public class AutomataCreate {
                         estadoDeclaracion = '2';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un Ident.");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -231,6 +251,8 @@ public class AutomataCreate {
                         estado = 'J';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un valor de Estruc. Declaración");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -249,6 +271,8 @@ public class AutomataCreate {
                         comandoEnAceptacion.add(stringDatosTabla);
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un \"KEY\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -267,6 +291,8 @@ public class AutomataCreate {
                         comandoEnAceptacion.add(stringDatosTabla);
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un \"NULL\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -280,7 +306,7 @@ public class AutomataCreate {
     }
 
     private void comprobarEsTipoDato(Token tokenIndividual, int indiceToken) {
-       // System.out.println("Comprobando tipo de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+        // System.out.println("Comprobando tipo de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
         switch (estadoTipoDeDatos) {
             case 'A':
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -316,6 +342,8 @@ public class AutomataCreate {
                     estadoTipoDeDatos = 'G';
                     datosTabla.add(tokenIndividual.getNombre() + " ");
                 } else {
+                    tokenIndividual.setDescripcionTokenError("Se esperaba un \"Tipo de Dato\"");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = 'E';
                 }
 
@@ -328,6 +356,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un \")\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -338,6 +368,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un ENTERO");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -366,6 +398,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un \"Tipo de Dato\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -376,6 +410,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un \")\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -386,6 +422,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un ENTERO");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -396,6 +434,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \",\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -406,6 +446,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un ENTERO");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -433,6 +475,8 @@ public class AutomataCreate {
 
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \"Tipo de Dato\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -454,6 +498,8 @@ public class AutomataCreate {
                         estadoEstructuraLlave = 'B';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \"CONSTRAINT\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -466,6 +512,8 @@ public class AutomataCreate {
                         datosTabla.add(": ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba Ident.");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -476,6 +524,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre() + " ");
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \"FOREIGN\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -486,6 +536,8 @@ public class AutomataCreate {
                         datosTabla.add(tokenIndividual.getNombre());
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \"KEY\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -495,6 +547,8 @@ public class AutomataCreate {
                         estadoEstructuraLlave = 'G';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \"(\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -504,6 +558,8 @@ public class AutomataCreate {
                         estadoEstructuraLlave = 'H';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un Ident.");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -513,6 +569,8 @@ public class AutomataCreate {
                         estadoEstructuraLlave = 'I';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \")\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -522,6 +580,8 @@ public class AutomataCreate {
                         estadoEstructuraLlave = 'J';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \"REFERENCES\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -531,6 +591,8 @@ public class AutomataCreate {
                         estadoEstructuraLlave = 'P';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba un Ident.");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -540,6 +602,8 @@ public class AutomataCreate {
                         estadoEstructuraLlave = 'L';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \"(\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -549,6 +613,8 @@ public class AutomataCreate {
                         estadoEstructuraLlave = 'M';
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba Ident.");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;
@@ -565,6 +631,8 @@ public class AutomataCreate {
                         comandoEnAceptacion.add(stringDatosTabla);
                         break;
                     default:
+                        tokenIndividual.setDescripcionTokenError("Se esperaba \")\"");
+                        erroresSintacticos.add(tokenIndividual);
                         estado = 'E';
                 }
                 break;

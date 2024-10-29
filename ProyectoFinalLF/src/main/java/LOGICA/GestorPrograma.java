@@ -25,17 +25,26 @@ public class GestorPrograma {
     private List<Token> tokens;
     private List<Token> tokensColores;
     private List<Token> erroresLexico;
+    private List<Token> erroresSintacticos = new ArrayList<>();
 
     private List<List<Token>> todosLosComandos;
     private AnalizadorDDLyDML analizadorDDL;
     private Reportes reportes = new Reportes();
+    
 
     private JButton btnOtrosReportes;
     private JButton btnReporteSintactico;
     private JButton btnGenerarGrafico;
 
-    public GestorPrograma() {
+    public GestorPrograma(JTextPane panelTexto, JTextPane txtColores, JButton btnOtrosReportes, JButton btnReporteSintactico, JButton btnGenerarGrafico) {
+        this.panelTexto = panelTexto;
+        this.txtColores = txtColores;
+        this.doc = txtColores.getStyledDocument();
+        this.btnOtrosReportes = btnOtrosReportes;
+        this.btnReporteSintactico = btnReporteSintactico;
+        this.btnGenerarGrafico = btnGenerarGrafico;
     }
+
 
     public String getTextoOriginal() {
         return textoOriginal;
@@ -57,19 +66,19 @@ public class GestorPrograma {
         return erroresLexico;
     }
     
-    public void procesar(String textoOriginal, JTextPane panelTexto, JTextPane txtColores, JButton btnOtrosReportes,
-            JButton btnReporteSintactico, JButton btnGenerarGrafico) {
+    public void procesar(String textoOriginal/*, JTextPane panelTexto, JTextPane txtColores, JButton btnOtrosReportes,
+            JButton btnReporteSintactico, JButton btnGenerarGrafico*/) {
         this.textoOriginal = textoOriginal;
-        this.panelTexto = panelTexto;
-        this.txtColores = txtColores;
-        this.doc = txtColores.getStyledDocument();
-        this.btnOtrosReportes = btnOtrosReportes;
-        this.btnReporteSintactico = btnReporteSintactico;
-        this.btnGenerarGrafico = btnGenerarGrafico;
+//        this.panelTexto = panelTexto;
+//        this.txtColores = txtColores;
+//        this.doc = txtColores.getStyledDocument();
+//        this.btnOtrosReportes = btnOtrosReportes;
+//        this.btnReporteSintactico = btnReporteSintactico;
+//        this.btnGenerarGrafico = btnGenerarGrafico;
 
         obtenerMatrizLineas(textoOriginal);
 
-        procesarAnalizadorLexico();
+        procesarAnalizadorLexico(this.textoOriginal);
 
         //imprimirValores();
         imprimirMatrizColores();
@@ -77,7 +86,21 @@ public class GestorPrograma {
         procesarAnalizadorSintactico();
 
     }
+    
+    public void procesarDesdeArchivo (String[] matrizLineas, String textoArchivo) {
+        
+        obtenerMatrizLineas(textoArchivo);
 
+        procesarAnalizadorLexico(textoArchivo);
+        panelTexto.setText(textoArchivo);
+
+        //imprimirValores();
+        imprimirMatrizColores();
+
+        procesarAnalizadorSintactico();
+        
+    }
+    
     public void generarGrafico() {
         System.out.println("GRAFICOS -------------------------------------");
         //Generar Grafico CREATE
@@ -124,11 +147,11 @@ public class GestorPrograma {
 
     }
 
-    private void procesarAnalizadorLexico() {
+    private void procesarAnalizadorLexico(String texto) {
         txtColores.setText("");
         try {
 
-            AnalizadorLexico analizadorLexico = new AnalizadorLexico(new StringReader(textoOriginal));
+            AnalizadorLexico analizadorLexico = new AnalizadorLexico(new StringReader(texto));
 
             while (analizadorLexico.yylex() != AnalizadorLexico.YYEOF) {
             }

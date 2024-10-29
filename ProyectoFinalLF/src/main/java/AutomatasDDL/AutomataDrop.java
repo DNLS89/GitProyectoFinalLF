@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutomataDrop {
+
     private char estado = 'A';
-    
+
     private List<List<String>> comandosAceptadosModificacion;
     private List<String> comandoEnAceptacion = new ArrayList<>();
     private List<String> datosTabla;
+    private List<Token> erroresSintacticos;
 
-    public AutomataDrop(List<List<String>> comandosAceptadosModificacion) {
+    public AutomataDrop(List<List<String>> comandosAceptadosModificacion, List<Token> erroresSintacticos) {
         this.comandosAceptadosModificacion = comandosAceptadosModificacion;
+        this.erroresSintacticos = erroresSintacticos;
     }
-    
-    
 
     public boolean verificarPerteneceAlAutomata(List<Token> comandoIndividual) {
 
@@ -30,6 +31,8 @@ public class AutomataDrop {
                             estado = 'B';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \"DROP\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -40,6 +43,8 @@ public class AutomataDrop {
                             estado = 'C';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \"TABLE\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -50,6 +55,8 @@ public class AutomataDrop {
                             estado = 'D';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \"IF\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -59,6 +66,8 @@ public class AutomataDrop {
                             estado = 'F';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \"EXISTS\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -70,6 +79,8 @@ public class AutomataDrop {
                             comandoEnAceptacion.add("DROP " + token.getNombre());
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba un Ident.");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -80,6 +91,8 @@ public class AutomataDrop {
                             comandoEnAceptacion.add(token.getNombre());
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \"CASCADE\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
@@ -91,13 +104,15 @@ public class AutomataDrop {
                             estado = 'I';
                             break;
                         default:
+                            token.setDescripcionTokenError("Se esperaba \";\"");
+                            erroresSintacticos.add(token);
                             estado = 'E';
                     }
                     break;
 
                 case 'E':
-                   // System.out.println("Token en el que detectó error DROP: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
-                    return false;
+                    // System.out.println("Token en el que detectó error DROP: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
+                    //return false;
                 //break;
 
             }
@@ -113,5 +128,5 @@ public class AutomataDrop {
 
         return false;
     }
-    
+
 }
