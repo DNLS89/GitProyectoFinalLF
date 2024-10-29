@@ -2,6 +2,7 @@ LOGICA/Token.class
 com/mycompany/proyectofinallf/ProyectoFinalLF.class
 AutomatasDDL/AutomataCreate2.class
 LOGICA/AnalizadorLexico.class
+LOGICA/LectorArchivo.class
 GUI/Pantalla$3.class
 GUI/EditorScrollPane$1.class
 AutomatasDDL/AutomataAlter.class
@@ -18,6 +19,7 @@ GUI/EditorScrollPane.class
 GUI/EditorScrollPane$2.class
 GUI/Pantalla$4.class
 LOGICA/GraphViz.class
+GUI/Pantalla$6.class
 LOGICA/GestorPrograma.class
 GUI/Pantalla$1.class
 AutomatasDML/AutomataDelete.class
