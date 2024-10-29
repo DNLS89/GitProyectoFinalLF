@@ -4,19 +4,21 @@ import LOGICA.Token;
 import java.util.List;
 
 public class AutomataUpdate {
-    
-    
+
     //private List<Token> tokens;
     private String estado = "1";
     private final String estadoSeleccionColumna = "2";
     private final String estadoFuncionAgregacion = "2";
 
-    private String estadoSentencia = "11";
+    private String estadoSentencia = "7";
 
     private char estadoTipoDeDatos = 'A';
 
     private boolean terminaEnRamaSuperior = false;
+
     private boolean esPrevioAWhere = true;
+    private boolean dentroDeWhere = false;
+    private boolean estaEnPuntosCorrectosDeWhere = false;
 
     private List<List<Token>> todosLosComandos;
     int indiceGENERAL;
@@ -31,8 +33,7 @@ public class AutomataUpdate {
 
         for (int indiceToken = 0; indiceToken < comandoIndividual.size(); indiceToken++) {
             Token token = comandoIndividual.get(indiceToken);
-            System.out.println("EVALUANDO token \"" + token.getNombre() + "\" tipo: " + token.getTipo() + " estados: 1 " + estado + " seleccion " + estadoSeleccionColumna + " sentencia " + estadoSentencia + 
-            " agregacion " + estadoFuncionAgregacion);
+//            System.out.println("EVALUANDO token \"" + token.getNombre() + "\" tipo: " + token.getTipo() + " estados: 1 " + estado + " where " + estadoSentencia);
 
             switch (estado) {
                 case "1" -> {
@@ -80,20 +81,32 @@ public class AutomataUpdate {
                     }
                 }
                 case "6" -> {
+                    esPrevioAWhere = true;
                     comprobarEsEstructuraDato(token, indiceToken);
                 }
-                
+
                 case "7" -> {
 
-                    if (token.getNombre().equals(";")) {
+//                    if (token.getNombre().equals(";")) {
+//                        estado = "9";
+//
+//                    } else if (token.getNombre().equals(",")) {
+//                        estado = "4";
+//                    } else {
+//                        comprobarEsWhere(token, indiceToken);
+//                    }
+
+                    if (token.getNombre().equals(";") && (!dentroDeWhere || estaEnPuntosCorrectosDeWhere)) {
+
                         estado = "9";
 
                     } else if (token.getNombre().equals(",")) {
                         estado = "4";
-                    }
-                        else {
+                    } else {
+                        dentroDeWhere = true;
                         comprobarEsWhere(token, indiceToken);
                     }
+
                 }
                 case "E" -> {
 //                    System.out.println("Token en el que detectó error DML SELECT: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
@@ -114,9 +127,9 @@ public class AutomataUpdate {
     }
 
     private void comprobarEsWhere(Token tokenIndividual, int indiceToken) {
-        System.out.println("PREUBA WHERE");
+//        System.out.println("PREUBA WHERE");
 
-        if (estadoSentencia.equals("4")) {
+        if (estadoSentencia.equals("7")) {
             if (tokenIndividual.getNombre().equals("WHERE")) {
                 estadoSentencia = "24";
             } else {
@@ -143,7 +156,8 @@ public class AutomataUpdate {
 
             if (tokenIndividual.getTipo().equals("IDENTIFICADOR")) {
                 estadoSentencia = "4";
-                estado = "5";
+                //estado = estadoFinalSentencia;
+                dentroDeWhere = false;
             } else {
                 estado = "E";
             }
@@ -152,6 +166,7 @@ public class AutomataUpdate {
 //            System.out.println("PRUEBA ESTADO 33 token:" + tokenIndividual.getNombre());
             if (tokenIndividual.getNombre().equals("AND")) {
                 estadoSentencia = "34";
+                estaEnPuntosCorrectosDeWhere = false;
             } else {
                 estado = "E";
             }
@@ -186,9 +201,9 @@ public class AutomataUpdate {
         }
 
     }
-    
+
     private void comprobarEsEstructuraDato(Token tokenIndividual, int indice) {
-        System.out.println("Comprobando estructura de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+//        System.out.println("Comprobando estructura de dato " + tokenIndividual.getNombre() + " estado " + estadoTipoDeDatos);
         switch (estadoTipoDeDatos) {
             case 'A':
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -202,13 +217,27 @@ public class AutomataUpdate {
                             || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("OR") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<")
                             || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
 
-                        if (terminaEnRamaSuperior) {
-                            estadoSentencia = "37";
-                            estadoTipoDeDatos = 'A';
+                        //LO de abajo es para cuando sea DATO previo a WHERE
+                        if (!esPrevioAWhere) {
+
+                            if (terminaEnRamaSuperior && !todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(".")) {
+                                dentroDeWhere = false;
+                            }
+
+                            if (terminaEnRamaSuperior) {
+                                estadoSentencia = "37";
+                                estadoTipoDeDatos = 'A';
+                            } else {
+                                estaEnPuntosCorrectosDeWhere = true;
+                                estadoSentencia = "33";
+                                estadoTipoDeDatos = 'A';
+                                terminaEnRamaSuperior = true;
+                            }
+
                         } else {
-                            estadoSentencia = "33";
+                            estado = "7";
+                            esPrevioAWhere = false;
                             estadoTipoDeDatos = 'A';
-                            terminaEnRamaSuperior = true;
                         }
 
                     } else {
@@ -258,13 +287,25 @@ public class AutomataUpdate {
                             || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("OR") || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals("<")
                             || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
 
-                        if (terminaEnRamaSuperior) {
-                            estadoSentencia = "37";
-                            estadoTipoDeDatos = 'A';
+                        if (!esPrevioAWhere) {
+                            if (terminaEnRamaSuperior && !todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(".")) {
+                                dentroDeWhere = false;
+                            }
+
+                            if (terminaEnRamaSuperior) {
+                                estadoSentencia = "37";
+                                estadoTipoDeDatos = 'A';
+                            } else {
+                                estadoSentencia = "33";
+                                estaEnPuntosCorrectosDeWhere = true;
+                                estadoTipoDeDatos = 'A';
+                                terminaEnRamaSuperior = true;
+                            }
+
                         } else {
-                            estadoSentencia = "33";
+                            estado = "7";
+                            esPrevioAWhere = false;
                             estadoTipoDeDatos = 'A';
-                            terminaEnRamaSuperior = true;
                         }
 
 //                        estado = "10";

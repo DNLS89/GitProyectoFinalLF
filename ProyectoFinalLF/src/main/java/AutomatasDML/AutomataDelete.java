@@ -101,6 +101,7 @@ public class AutomataDelete {
         return false;
     }
 
+    
     private void comprobarEsWhere(Token tokenIndividual, int indiceToken) {
 //        System.out.println("PREUBA WHERE");
 

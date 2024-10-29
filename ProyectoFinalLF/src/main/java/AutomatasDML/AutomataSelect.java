@@ -46,7 +46,7 @@ public class AutomataSelect {
         for (int indiceToken = 0; indiceToken < comandoIndividual.size(); indiceToken++) {
             Token token = comandoIndividual.get(indiceToken);
 //            System.out.println("EVALUANDO token \"" + token.getNombre() + "\" tipo: " + token.getTipo() + " estados: 1 " + estado + " seleccion " + estadoSeleccionColumna + " sentencia " + estadoSentencia + 
-            //" agregacion " + estadoFuncionAgregacion);
+//            " agregacion " + estadoFuncionAgregacion);
 
             switch (estado) {
                 case "1" -> {
@@ -154,6 +154,8 @@ public class AutomataSelect {
                 case "11" -> {
                     if (token.getNombre().equals(";") && !estado.equals("E") && estaEnPuntosCorrectosDeWhere ) {
                         estado = "6";
+                    } else if (token.getNombre().equals(";") && todosLosComandos.get(indiceGENERAL).get(indiceToken - 2).getNombre().equals("FROM")) {
+                        estado = "6";
                     } else if (token.getNombre().equals("LIMIT") && estaEnPuntosCorrectosDeWhere) {
                         estadoSentencia = "39";
                         sentencia(token, indiceToken);
@@ -200,7 +202,7 @@ public class AutomataSelect {
     }
 
     private void comprobarEsSeleccionColumna(Token tokenIndividual) {
-        System.out.println("Comprobando es seleccion \"" + tokenIndividual.getNombre() + "\" estado seleccion columna " + estadoTipoDeDatos);
+//        System.out.println("Comprobando es seleccion \"" + tokenIndividual.getNombre() + "\" estado seleccion columna " + estadoTipoDeDatos);
         switch (estadoSeleccionColumna) {
             case "2":
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -264,7 +266,7 @@ public class AutomataSelect {
     }
 
     private void comprobarEsFuncionAgregacion(Token tokenIndividual) {
-        // System.out.println("Comprobando es funcionAgregacion " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+//         System.out.println("Comprobando es funcionAgregacion " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
         switch (estadoFuncionAgregacion) {
             case "2":
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -320,7 +322,7 @@ public class AutomataSelect {
     }
 
     private void sentencia(Token token, int indiceToken) {
-        // System.out.println("Comprobando es secuencia " + token.getNombre());
+//         System.out.println("Comprobando es secuencia " + token.getNombre());
         if (!(comprobarEsJoin || comprobarEsWhere || comprobarEsGroup || comprobarEsOrder || comprobarEsLimit)) {
             if (token.getNombre().equals("JOIN")) {
                 comprobarEsJoin = true;
@@ -351,7 +353,7 @@ public class AutomataSelect {
     }
 
     private void comprobarEsJoin(Token tokenIndividual, int indiceToken) {
-        //System.out.println("Comprobando es seleccion JOIN " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
+//        System.out.println("Comprobando es seleccion JOIN " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
 
         if (estadoSentencia.equals(estadoInicialSentencia)) {
             if (tokenIndividual.getNombre().equals("JOIN")) {

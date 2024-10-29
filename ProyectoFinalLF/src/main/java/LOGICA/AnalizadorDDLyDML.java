@@ -7,6 +7,7 @@ import AutomatasDDL.AutomataDrop;
 import AutomatasDML.AutomataDelete;
 import AutomatasDML.AutomataInsert;
 import AutomatasDML.AutomataSelect;
+import AutomatasDML.AutomataUpdate;
 import LOGICA.Token;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,16 +81,23 @@ public class AnalizadorDDLyDML {
         List<Token> comandoIndividual = null;
 
         for (Token token : tokens) {
-            if ((token.getNombre().equals("CREATE") || token.getNombre().equals("ALTER") || token.getNombre().equals("DROP")) && !guardarElementos
-                    || (token.getNombre().equals("INSERT")) || (token.getNombre().equals("SELECT")) || (token.getNombre().equals("DELETE"))) {
+            
+            if ((token.getNombre().equals("CREATE") || token.getNombre().equals("ALTER") || token.getNombre().equals("DROP") 
+                    || (token.getNombre().equals("INSERT")) || (token.getNombre().equals("SELECT")) 
+                    || (token.getNombre().equals("UPDATE")) || (token.getNombre().equals("DELETE"))) 
+                    && !guardarElementos
+                    ) {
                 comandoIndividual = new ArrayList<>();
                 guardarElementos = true;
 
                 btnOtrosReportes.setVisible(true);
                 
 
-                //Muestra botones reportes
             } else {
+                btnOtrosReportes.setVisible(true);
+            }
+            
+            if (!guardarElementos) {
                 token.setDescripcionTokenError("Se esperaba CREATE | ALTER | DROP | INSERT | SELECT");
                 btnReporteSintactico.setVisible(true);
                 erroresSintacticos.add(token);
@@ -99,7 +107,7 @@ public class AnalizadorDDLyDML {
                 comandoIndividual.add(token);
             }
 
-            if (token.getNombre().equals(";")) {
+            if (token.getNombre().equals(";") && guardarElementos) {
                 guardarElementos = false;
                 todosLosComandos.add(comandoIndividual);
             }
@@ -128,7 +136,7 @@ public class AnalizadorDDLyDML {
         AutomataAlter automataAlter = new AutomataAlter(comandosAceptadosModificacion);
         AutomataInsert automataInsert = new AutomataInsert(todosLosComandos, indice);
         AutomataSelect automataSelect = new AutomataSelect(todosLosComandos, indice);
-        
+        AutomataUpdate automataUpdate = new AutomataUpdate(todosLosComandos, indice);
         AutomataDelete automataDelete = new AutomataDelete(todosLosComandos, indice);
 
         if (comandoIndividual.get(0).getNombre().equals("CREATE")) {
@@ -148,6 +156,9 @@ public class AnalizadorDDLyDML {
         } else if (comandoIndividual.get(0).getNombre().equals("DELETE")) {
             
             return automataDelete.verificarPerteneceAlAutomata(comandoIndividual);
+        } else if (comandoIndividual.get(0).getNombre().equals("UPDATE")) {
+        
+            return automataUpdate.verificarPerteneceAlAutomata(comandoIndividual);
         } else {
             System.out.println("NO cumple con los formatos anteriores");
             return false;
