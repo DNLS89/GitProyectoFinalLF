@@ -3,7 +3,7 @@ package AutomatasDML;
 import LOGICA.Token;
 import java.util.List;
 
-public class AutomataSelect {
+public class AutomataSelect1 {
 
     //private List<Token> tokens;
     private String estado = "1";
@@ -25,17 +25,18 @@ public class AutomataSelect {
     private boolean comprobarEsOrder = false;
     private boolean comprobarEsLimit = false;
     
+    private boolean dentroDeWhere = false;
+    
     
     
     private boolean funcionAgregacion2 = false;
 
     private boolean terminaEnRamaSuperior = false;
-    private boolean estaEnPuntosCorrectosDeWhere = false;
 
     private List<List<Token>> todosLosComandos;
     int indiceGENERAL;
 
-    public AutomataSelect(List<List<Token>> todosLosComandos, int indiceGENERAL) {
+    public AutomataSelect1(List<List<Token>> todosLosComandos, int indiceGENERAL) {
         //this.tokens = tokens;
         this.todosLosComandos = todosLosComandos;
         this.indiceGENERAL = indiceGENERAL;
@@ -45,8 +46,8 @@ public class AutomataSelect {
 
         for (int indiceToken = 0; indiceToken < comandoIndividual.size(); indiceToken++) {
             Token token = comandoIndividual.get(indiceToken);
-//            System.out.println("EVALUANDO token \"" + token.getNombre() + "\" tipo: " + token.getTipo() + " estados: 1 " + estado + " seleccion " + estadoSeleccionColumna + " sentencia " + estadoSentencia + 
-            //" agregacion " + estadoFuncionAgregacion);
+            System.out.println("EVALUANDO token \"" + token.getNombre() + "\" tipo: " + token.getTipo() + " estados: 1 " + estado + " seleccion " + estadoSeleccionColumna + " sentencia " + estadoSentencia + 
+            " agregacion " + estadoFuncionAgregacion);
 
             switch (estado) {
                 case "1" -> {
@@ -152,9 +153,9 @@ public class AutomataSelect {
                     }
                 }
                 case "11" -> {
-                    if (token.getNombre().equals(";") && !estado.equals("E") && estaEnPuntosCorrectosDeWhere ) {
+                    if (token.getNombre().equals(";") && !dentroDeWhere) {
                         estado = "6";
-                    } else if (token.getNombre().equals("LIMIT") && estaEnPuntosCorrectosDeWhere) {
+                    } else if (token.getNombre().equals("LIMIT")) {
                         estadoSentencia = "39";
                         sentencia(token, indiceToken);
                     }
@@ -174,13 +175,20 @@ public class AutomataSelect {
                 }
                 case "39" -> {
                     if (token.getTipo().equals("ENTERO")) {
+                        estado = "40";
+                    } else {
+                        sentencia(token, indiceToken);
+                    }
+                }
+                case "40" -> {
+                    if (token.getNombre().equals(";")) {
                         estado = "6";
                     } else {
                         sentencia(token, indiceToken);
                     }
                 }
                 case "E" -> {
-//                    System.out.println("Token en el que detectó error DML SELECT: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
+                    System.out.println("Token en el que detectó error DML SELECT: " + comandoIndividual.get(indiceToken - 1) + " fila y columna " + token.getFila() + " " + token.getColumna());
                     return false;
                     //break;
                 }
@@ -256,15 +264,15 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
-//            System.out.println("");
-//            System.out.println("Token error en seleccioncolumna: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en seleccioncolumna: " + tokenIndividual);
+            System.out.println("");
         }
 
     }
 
     private void comprobarEsFuncionAgregacion(Token tokenIndividual) {
-        // System.out.println("Comprobando es funcionAgregacion " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+         System.out.println("Comprobando es funcionAgregacion " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
         switch (estadoFuncionAgregacion) {
             case "2":
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -313,19 +321,20 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
-//            System.out.println("");
-//            System.out.println("Token error en funcion agregacion: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en funcion agregacion: " + tokenIndividual);
+            System.out.println("");
         }
     }
 
     private void sentencia(Token token, int indiceToken) {
-        // System.out.println("Comprobando es secuencia " + token.getNombre());
+         System.out.println("Comprobando es secuencia " + token.getNombre());
         if (!(comprobarEsJoin || comprobarEsWhere || comprobarEsGroup || comprobarEsOrder || comprobarEsLimit)) {
             if (token.getNombre().equals("JOIN")) {
                 comprobarEsJoin = true;
             } else if (token.getNombre().equals("WHERE")) {
                 comprobarEsWhere = true;
+                dentroDeWhere = true;
             } else if (token.getNombre().equals("GROUP")) {
                 comprobarEsGroup = true;
             } else if (token.getNombre().equals("ORDER")) {
@@ -351,7 +360,7 @@ public class AutomataSelect {
     }
 
     private void comprobarEsJoin(Token tokenIndividual, int indiceToken) {
-        //System.out.println("Comprobando es seleccion JOIN " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
+        System.out.println("Comprobando es seleccion JOIN " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
 
         if (estadoSentencia.equals(estadoInicialSentencia)) {
             if (tokenIndividual.getNombre().equals("JOIN")) {
@@ -415,14 +424,14 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
-//            System.out.println("");
-//            System.out.println("Token error en JOIN: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en JOIN: " + tokenIndividual);
+            System.out.println("");
         }
     }
 
     private void comprobarEsWhere(Token tokenIndividual, int indiceToken) {
-//        System.out.println("PREUBA WHERE");
+        System.out.println("PREUBA WHERE");
 
         if (estadoSentencia.equals(estadoInicialSentencia)) {
             if (tokenIndividual.getNombre().equals("WHERE")) {
@@ -440,7 +449,9 @@ public class AutomataSelect {
             }
 
         } else if (estadoSentencia.equals("25")) {
-            if (tokenIndividual.getNombre().equals("=")) {
+            if (tokenIndividual.getNombre().equals("=") || tokenIndividual.getNombre().equals("<") || tokenIndividual.getNombre().equals(">")
+                    || tokenIndividual.getNombre().equals("+") || tokenIndividual.getNombre().equals("-") || tokenIndividual.getNombre().equals("*")
+                    || tokenIndividual.getNombre().equals("/")) {
                 estadoSentencia = "26";
             } else {
                 estado = "E";
@@ -452,16 +463,16 @@ public class AutomataSelect {
             if (tokenIndividual.getTipo().equals("IDENTIFICADOR")) {
                 estadoSentencia = estadoInicialSentencia;
                 estado = estadoFinalSentencia;
+                dentroDeWhere = false;
                 comprobarEsWhere = false;
             } else {
                 estado = "E";
             }
             
         } else if (estadoSentencia.equals("33")) {
-//            System.out.println("PRUEBA ESTADO 33 token:" + tokenIndividual.getNombre());
+            System.out.println("PRUEBA ESTADO 33 token:" + tokenIndividual.getNombre());
             if (tokenIndividual.getNombre().equals("AND")) {
                 estadoSentencia = "34";
-                estaEnPuntosCorrectosDeWhere = false;
             } else {
                 estado = "E";
             }
@@ -481,25 +492,46 @@ public class AutomataSelect {
 
             comprobarEsEstructuraDato(tokenIndividual, indiceToken);
 
+//            if (tokenIndividual.getTipo().equals("IDENTIFICADOR")) {
+//                estadoSentencia = "37";
+//            } else {
+//                estado = "E";
+//            }
+
+//            if (tokenIndividual.getTipo().equals("IDENTIFICADOR") || tokenIndividual.getTipo().equals("CADENA")) {
+//
+//                if (tokenIndividual.getTipo().equals("IDENTIFICADOR") && todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals(".")) {
+//                    estadoSentencia = "37";
+//                } else if (todosLosComandos.get(indiceGENERAL).get(indiceToken + 1).getNombre().equals(";")) {
+//                    estadoSentencia = estadoInicialSentencia;
+//                    estado = estadoFinalSentencia;
+//                    comprobarEsWhere = false;
+//                } else {
+//                    estado = "E";
+//                }
+//
+//            } else {
+//                estado = "E";
+//            }
         } else if (estadoSentencia.equals("37")) {
             if (tokenIndividual.getNombre().equals(".")) {
                 estadoSentencia = "27";
-                estaEnPuntosCorrectosDeWhere = false;
             } else {
                 estado = "E";
             }
         }
         
+
         if (estado.equals("E")) {
-//            System.out.println("");
-//            System.out.println("Token error en ORDER: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en ORDER: " + tokenIndividual);
+            System.out.println("");
         }
 
     }
 
     private void comprobarEsGroup(Token tokenIndividual, int indiceToken) {
-//        System.out.println("Comprobando es seleccion GROUP " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
+        System.out.println("Comprobando es seleccion GROUP " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
 
         if (estadoSentencia.equals(estadoInicialSentencia)) {
             if (tokenIndividual.getNombre().equals("GROUP")) {
@@ -546,14 +578,14 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
-//            System.out.println("");
-//            System.out.println("Token error en GROUP: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en GROUP: " + tokenIndividual);
+            System.out.println("");
         }
     }
 
     private void comprobarEsOrder(Token tokenIndividual, int indiceToken) {
-//        System.out.println("Comprobando es seleccion ORDER " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
+        System.out.println("Comprobando es seleccion ORDER " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
 
         if (estadoSentencia.equals(estadoInicialSentencia)) {
             if (tokenIndividual.getNombre().equals("ORDER")) {
@@ -586,14 +618,14 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
-//            System.out.println("");
-//            System.out.println("Token error en ORDER: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en ORDER: " + tokenIndividual);
+            System.out.println("");
         }
     }
 
     private void comprobarEsLimit(Token tokenIndividual, int indiceToken) {
-//        System.out.println("Comprobando es seleccion LIMIT " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
+        System.out.println("Comprobando es seleccion LIMIT " + tokenIndividual.getNombre() + " estado sentencia " + estadoSentencia);
 
         if (estadoSentencia.equals(estadoInicialSentencia)) {
             if (tokenIndividual.getNombre().equals("LIMIT")) {
@@ -612,15 +644,15 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
-//            System.out.println("");
-//            System.out.println("Token error en LIMIT: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en LIMIT: " + tokenIndividual);
+            System.out.println("");
         }
 
     }
 
     private void comprobarEsEstructuraDato(Token tokenIndividual, int indice) {
-//        System.out.println("Comprobando estructura de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
+        System.out.println("Comprobando estructura de dato " + tokenIndividual.getNombre() + " estado tipo de dato " + estadoTipoDeDatos);
         switch (estadoTipoDeDatos) {
             case 'A':
                 //Abajo entra a la letra y en base a eso cambia de estado
@@ -635,11 +667,12 @@ public class AutomataSelect {
                             || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
 
                         if (terminaEnRamaSuperior) {
-                            estadoSentencia = "37";
+                            estado = estadoFinalSentencia;
+//                            estadoSentencia = "37";
+                            estadoSentencia = estadoInicialSentencia;
+                            dentroDeWhere = false;
                             estadoTipoDeDatos = 'A';
-                            estaEnPuntosCorrectosDeWhere = true;
                         } else {
-                            estaEnPuntosCorrectosDeWhere = true;
                             estadoSentencia = "33";
                             estadoTipoDeDatos = 'A';
                             terminaEnRamaSuperior = true;
@@ -693,12 +726,13 @@ public class AutomataSelect {
                             || todosLosComandos.get(indiceGENERAL).get(indice + 1).getNombre().equals(">"))) {
 
                         if (terminaEnRamaSuperior) {
-                            estadoSentencia = "37";
-                            estaEnPuntosCorrectosDeWhere = true;
+                            estado = estadoFinalSentencia;
+//                            estadoSentencia = "37";
+                            estadoSentencia = estadoInicialSentencia;
+                            dentroDeWhere = false;
                             estadoTipoDeDatos = 'A';
                         } else {
                             estadoSentencia = "33";
-                            estaEnPuntosCorrectosDeWhere = true;
                             estadoTipoDeDatos = 'A';
                             terminaEnRamaSuperior = true;
                         }
@@ -717,9 +751,9 @@ public class AutomataSelect {
         }
 
         if (estado.equals("E")) {
-//            System.out.println("");
-//            System.out.println("Token error en estructura de datos: " + tokenIndividual);
-//            System.out.println("");
+            System.out.println("");
+            System.out.println("Token error en estructura de datos: " + tokenIndividual);
+            System.out.println("");
         }
     }
 
