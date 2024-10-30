@@ -40,19 +40,27 @@ public class AutomataUpdate {
             switch (estado) {
                 case "1" -> {
                     //Abajo entra a la letra y en base a eso cambia de estado
-                    estado = switch (token.getNombre()) {
-                        case "UPDATE" ->
-                            "2";
-                        default ->
-                            "E";
+                    switch (token.getNombre()) {
+                        case "UPDATE" -> {
+                            estado = "2";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba un elemento de \"UPDATE\"");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
                 case "2" -> {
-                    estado = switch (token.getTipo()) {
-                        case "IDENTIFICADOR" ->
-                            "3";
-                        default ->
-                            "E";
+                    switch (token.getTipo()) {
+                        case "IDENTIFICADOR" -> {
+                            estado = "3";
+                        }
+                        default -> {
+                            token.setDescripcionTokenError("Se esperaba un Ident.");
+                            erroresSintacticos.add(token);
+                            estado = "E";
+                        }
                     };
                 }
 
@@ -97,7 +105,6 @@ public class AutomataUpdate {
 //                    } else {
 //                        comprobarEsWhere(token, indiceToken);
 //                    }
-
                     if (token.getNombre().equals(";") && (!dentroDeWhere || estaEnPuntosCorrectosDeWhere)) {
 
                         estado = "9";
@@ -135,6 +142,8 @@ public class AutomataUpdate {
             if (tokenIndividual.getNombre().equals("WHERE")) {
                 estadoSentencia = "24";
             } else {
+                tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de \"WHERE\"");
+                erroresSintacticos.add(tokenIndividual);
                 estado = "E";
             }
         } else if (estadoSentencia.equals("24")) {
@@ -150,6 +159,8 @@ public class AutomataUpdate {
             if (tokenIndividual.getNombre().equals("=")) {
                 estadoSentencia = "26";
             } else {
+                tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de \"=\"");
+                erroresSintacticos.add(tokenIndividual);
                 estado = "E";
             }
         } else if (estadoSentencia.equals("26")) {
@@ -161,6 +172,8 @@ public class AutomataUpdate {
                 //estado = estadoFinalSentencia;
                 dentroDeWhere = false;
             } else {
+                tokenIndividual.setDescripcionTokenError("Se esperaba un elemento Ident.");
+                erroresSintacticos.add(tokenIndividual);
                 estado = "E";
             }
 
@@ -170,18 +183,24 @@ public class AutomataUpdate {
                 estadoSentencia = "34";
                 estaEnPuntosCorrectosDeWhere = false;
             } else {
+                tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de \"AND\"");
+                erroresSintacticos.add(tokenIndividual);
                 estado = "E";
             }
         } else if (estadoSentencia.equals("34")) {
             if (tokenIndividual.getTipo().equals("IDENTIFICADOR")) {
                 estadoSentencia = "35";
             } else {
+                tokenIndividual.setDescripcionTokenError("Se esperaba un Ident.");
+                erroresSintacticos.add(tokenIndividual);
                 estado = "E";
             }
         } else if (estadoSentencia.equals("35")) {
             if (tokenIndividual.getNombre().equals("=")) {
                 estadoSentencia = "36";
             } else {
+                tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de \"=\"");
+                erroresSintacticos.add(tokenIndividual);
                 estado = "E";
             }
         } else if (estadoSentencia.equals("36")) {
@@ -192,13 +211,15 @@ public class AutomataUpdate {
             if (tokenIndividual.getNombre().equals(".")) {
                 estadoSentencia = "27";
             } else {
+                tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de \".\"");
+                erroresSintacticos.add(tokenIndividual);
                 estado = "E";
             }
         }
 
         if (estado.equals("E")) {
-            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de WHERE");
-            erroresSintacticos.add(tokenIndividual);
+//            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de WHERE");
+//            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en ORDER: " + tokenIndividual);
 //            System.out.println("");
@@ -251,6 +272,8 @@ public class AutomataUpdate {
                 } else if (tokenIndividual.getNombre().equals("(")) {
                     estadoTipoDeDatos = 'C';
                 } else {
+                    tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de \"(\"");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = "E";
                 }
 
@@ -264,6 +287,8 @@ public class AutomataUpdate {
                         || tokenIndividual.getNombre().equals(">")) {
                     estadoTipoDeDatos = 'A';
                 } else {
+                    tokenIndividual.setDescripcionTokenError("Se esperaba un OPERADOR");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = "E";
                 }
                 break;
@@ -319,6 +344,8 @@ public class AutomataUpdate {
                     }
 
                 } else {
+                    tokenIndividual.setDescripcionTokenError("Se esperaba un OPERADOR");
+                    erroresSintacticos.add(tokenIndividual);
                     estado = "E";
                 }
                 break;
@@ -326,8 +353,8 @@ public class AutomataUpdate {
         }
 
         if (estado.equals("E")) {
-            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de Estructura de Dato");
-            erroresSintacticos.add(tokenIndividual);
+//            tokenIndividual.setDescripcionTokenError("Se esperaba un elemento de Estructura de Dato");
+//            erroresSintacticos.add(tokenIndividual);
 //            System.out.println("");
 //            System.out.println("Token error en estructura de datos: " + tokenIndividual);
 //            System.out.println("");
